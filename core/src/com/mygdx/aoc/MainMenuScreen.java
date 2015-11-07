@@ -5,16 +5,26 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Align;
 
 public class MainMenuScreen implements Screen {
-    final AgeOfCapybaras g;
+    final private BitmapFont font;
+    final private SpriteBatch batch;
+    final private AgeOfCapybaras game;
     OrthographicCamera cam;
+    private float total;
+    private final float waitTime = 2.5f;
 
     public MainMenuScreen(AgeOfCapybaras game) {
-        this.g = game;
+        this.game = game;
+        font = ResourceManager.skin.getFont("bigDog");
+        batch = ResourceManager.batch;
+        total = 0.f;
 
         cam = new OrthographicCamera();
-        cam.setToOrtho(true, 480, 800);
+        cam.setToOrtho(false, 1080, 1920);
     }
 
     @Override
@@ -23,11 +33,18 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         cam.update();
-        g.batch.setProjectionMatrix(cam.combined);
+        batch.setProjectionMatrix(cam.combined);
 
-        g.batch.begin();
-        g.font.draw(g.batch, "hey dude", 85, 325);
-        g.batch.end();
+        batch.begin();
+        font.draw(batch, "hey dude, the startup logo"
+                + "would be here. Please click", 1080 * .125f, 1920 - 120, 1080 * 0.75f, Align.center, true);
+        batch.end();
+
+        total += delta;
+        if(total > waitTime || Gdx.input.isTouched()) {
+            game.setScreen(new MainScreen(game));
+            dispose();
+        }
     }
 
     @Override
