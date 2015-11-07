@@ -26,7 +26,8 @@ public class MainScreen implements Screen {
     public MainScreen(AgeOfCapybaras game) {
         g = game;
         ResourceManager.loadMain();
-        font = ResourceManager.skin.getFont("bigDog");
+        ResourceManager.fontPar.size = 100;
+        font = ResourceManager.fontGenDog.generateFont(ResourceManager.fontPar);
 
         OrthographicCamera cam = new OrthographicCamera();
         cam.setToOrtho(false, 1080, 1920);
@@ -42,9 +43,9 @@ public class MainScreen implements Screen {
         table.top();
         Drawable bad = ResourceManager.skin.getDrawable("badlogic");
         Color[] colors = {Color.FIREBRICK, Color.BLUE, Color.CYAN, Color.FOREST, Color.GOLD};
-        ColorDrawable[] ico = new ColorDrawable[5];
+        Drawable[] ico = new Drawable[5];
         for(int i = 0; i < colors.length; i++)
-            ico[i] = new ColorDrawable(bad, colors[i]);
+            ico[i] = ResourceManager.skin.newDrawable("badlogic", colors[i]);
         accessory = new Button(ico[0]);
         accessory.addListener(new InputListener(){
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -84,6 +85,8 @@ public class MainScreen implements Screen {
         final Button capybara = new Button(ResourceManager.skin.getDrawable("capybara"));
         capybara.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("clinking Capybara");
+                User.capybaraClick();
                 return true;
             }
         });
@@ -130,7 +133,8 @@ public class MainScreen implements Screen {
         stage.act(delta);
         stage.draw();
         stage.getBatch().begin();
-        font.draw(stage.getBatch(), currentScene, 50, 200);
+        font.draw(stage.getBatch(), currentScene, 50, 350);
+        font.draw(stage.getBatch(), User.toSmallString(User.capybaras.toBigInteger()), 50, 200);
         stage.getBatch().end();
 
         User.update(delta);
@@ -159,5 +163,6 @@ public class MainScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        font.dispose();
     }
 }
