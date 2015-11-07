@@ -32,6 +32,7 @@ public class ResourceManager {
         fontPar.borderWidth = 3;
         BitmapFont font = fontGenDog.generateFont(fontPar);
         skin.add("bigDog", font);
+        skin.add("badlogic", new Texture(Gdx.files.internal("badlogic.jpg")));
     }
 
     public static void loadMain() {
