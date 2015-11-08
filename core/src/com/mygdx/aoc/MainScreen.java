@@ -9,10 +9,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class MainScreen implements Screen {
     final AgeOfCapybaras g;
@@ -20,8 +21,10 @@ public class MainScreen implements Screen {
     private Table table;
     private BitmapFont font;
     private String currentScene;
+    private boolean hidden = false;
 
-    private Button option, accessory, ads, backOptions, backAccessory;
+    private Button option, accessory, ads, backOptions, backAccessory, capybara;
+    private OptionsMenu opt;
 
     public MainScreen(AgeOfCapybaras game) {
         g = game;
@@ -31,7 +34,7 @@ public class MainScreen implements Screen {
 
         OrthographicCamera cam = new OrthographicCamera();
         cam.setToOrtho(false, 1080, 1920);
-        stage = new Stage(new ScreenViewport(cam), ResourceManager.batch);
+        stage = new Stage(new FitViewport(1080, 1920, cam), ResourceManager.batch);
         Gdx.input.setInputProcessor(stage);
 
         table = new Table();
@@ -44,10 +47,10 @@ public class MainScreen implements Screen {
         Drawable bad = ResourceManager.skin.getDrawable("badlogic");
         Color[] colors = {Color.FIREBRICK, Color.BLUE, Color.CYAN, Color.FOREST, Color.GOLD};
         Drawable[] ico = new Drawable[5];
-        for(int i = 0; i < colors.length; i++)
+        for (int i = 0; i < colors.length; i++)
             ico[i] = ResourceManager.skin.newDrawable("badlogic", colors[i]);
         accessory = new Button(ico[0]);
-        accessory.addListener(new InputListener(){
+        accessory.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Going to Acessory");
                 goToAcessory();
@@ -55,14 +58,14 @@ public class MainScreen implements Screen {
             }
         });
         option = new Button(ico[1]);
-        option.addListener(new InputListener(){
+        option.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Going to Options");
                 goToOptions();
                 return true;
             }
         });
-        InputListener backListener = new InputListener(){
+        InputListener backListener = new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Going back");
                 goToMain();
@@ -74,7 +77,7 @@ public class MainScreen implements Screen {
         backOptions = new Button(ico[3]);
         backOptions.addListener(backListener);
         ads = new Button(ico[4]);
-        ads.addListener(new InputListener(){
+        ads.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Going to Ads");
                 goToAds();
@@ -82,7 +85,7 @@ public class MainScreen implements Screen {
             }
         });
 
-        final Button capybara = new Button(ResourceManager.skin.getDrawable("capybara"));
+        capybara = new Button(ResourceManager.skin.getDrawable("capybara"));
         capybara.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("clinking Capybara");
@@ -98,11 +101,15 @@ public class MainScreen implements Screen {
         float mn = Math.min(mxw / capybara.getWidth(), mxh / capybara.getHeight());
         table.add(capybara).top().left().padTop(1920 * .025f).padLeft(1080 * .05f).maxSize(mn * capybara.getWidth(), mn * capybara.getHeight());
         currentScene = "Main Screen";
+        opt = new OptionsMenu(stage, this);
     }
 
     private void goToOptions() {
-        table.getCells().get(0).setActor(backOptions);
-        table.getCells().get(1).clearActor();
+        accessory.setTouchable(Touchable.disabled);
+        option.setTouchable(Touchable.disabled);
+        capybara.setTouchable(Touchable.disabled);
+        opt.enabled = true;
+        Gdx.input.setInputProcessor(opt.stage);
         currentScene = "Options Menu";
     }
 
@@ -110,9 +117,14 @@ public class MainScreen implements Screen {
         System.out.println("Not Yet Implemented");
     }
 
-    private void goToMain() {
+    public void goToMain() {
+        accessory.setTouchable(Touchable.enabled);
+        option.setTouchable(Touchable.enabled);
+        capybara.setTouchable(Touchable.enabled);
         table.getCells().get(0).setActor(accessory);
         table.getCells().get(1).setActor(option);
+        Gdx.input.setInputProcessor(stage);
+        opt.enabled = false;
         currentScene = "Main Screen";
     }
 
@@ -124,11 +136,13 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
-
+        hidden = false;
     }
 
     @Override
     public void render(float delta) {
+        if (hidden) return;
+        stage.getViewport().apply();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
@@ -136,12 +150,13 @@ public class MainScreen implements Screen {
         font.draw(stage.getBatch(), currentScene, 50, 350);
         font.draw(stage.getBatch(), User.toSmallString(User.capybaras.toBigInteger()), 50, 200);
         stage.getBatch().end();
+        opt.render(delta, stage.getBatch());
 
         User.update(delta);
     }
 
     @Override
-    public void resize(int width, int height)  {
+    public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
 
@@ -157,7 +172,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void hide() {
-
+        hidden = true;
     }
 
     @Override
