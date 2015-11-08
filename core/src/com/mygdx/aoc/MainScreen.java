@@ -1,6 +1,7 @@
 package com.mygdx.aoc;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -20,10 +21,11 @@ public class MainScreen implements Screen {
     private Stage stage;
     private Table table;
     private BitmapFont font;
-    private String currentScene;
+    private State state;
     private boolean hidden = false;
 
     private Button option, accessory, ads, backOptions, backAccessory, capybara;
+
     private OptionsMenu opt;
 
     public MainScreen(AgeOfCapybaras game) {
@@ -100,8 +102,29 @@ public class MainScreen implements Screen {
         float mxw = 1080 * .9f, mxh = 1920 * .8f;
         float mn = Math.min(mxw / capybara.getWidth(), mxh / capybara.getHeight());
         table.add(capybara).top().left().padTop(1920 * .025f).padLeft(1080 * .05f).maxSize(mn * capybara.getWidth(), mn * capybara.getHeight());
-        currentScene = "Main Screen";
+        state = State.Main;
         opt = new OptionsMenu(stage, this);
+
+        stage.addListener(new InputListener(){
+            public boolean keyDown(InputEvent event, int keycode) {
+                if(keycode == Input.Keys.BACK && state != State.Main) {
+                    goToMain();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private enum State {
+        Main("Main Screen"),
+        Acessory("Acessory Screen"),
+        Options("Options Menu");
+
+        String name;
+        State(String s) {
+            name = s;
+        }
     }
 
     private void goToOptions() {
@@ -110,7 +133,7 @@ public class MainScreen implements Screen {
         capybara.setTouchable(Touchable.disabled);
         opt.enabled = true;
         Gdx.input.setInputProcessor(opt.stage);
-        currentScene = "Options Menu";
+        state = State.Options;
     }
 
     private void goToAds() {
@@ -118,6 +141,7 @@ public class MainScreen implements Screen {
     }
 
     public void goToMain() {
+        System.out.println("going to main");
         accessory.setTouchable(Touchable.enabled);
         option.setTouchable(Touchable.enabled);
         capybara.setTouchable(Touchable.enabled);
@@ -125,13 +149,13 @@ public class MainScreen implements Screen {
         table.getCells().get(1).setActor(option);
         Gdx.input.setInputProcessor(stage);
         opt.enabled = false;
-        currentScene = "Main Screen";
+        state = State.Main;
     }
 
     private void goToAcessory() {
         table.getCells().get(0).setActor(ads);
         table.getCells().get(1).setActor(backAccessory);
-        currentScene = "Accessory Screen";
+        state = State.Acessory;
     }
 
     @Override
@@ -147,7 +171,7 @@ public class MainScreen implements Screen {
         stage.act(delta);
         stage.draw();
         stage.getBatch().begin();
-        font.draw(stage.getBatch(), currentScene, 50, 350);
+        font.draw(stage.getBatch(), state.name, 50, 350);
         font.draw(stage.getBatch(), User.toSmallString(User.capybaras.toBigInteger()), 50, 200);
         stage.getBatch().end();
         opt.render(delta, stage.getBatch());

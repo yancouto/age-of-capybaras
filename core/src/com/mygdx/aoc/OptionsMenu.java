@@ -1,5 +1,6 @@
 package com.mygdx.aoc;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -74,6 +75,15 @@ public class OptionsMenu {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 m.goToMain();
                 return true;
+            }
+        });
+        stage.addListener(new InputListener(){
+            public boolean keyDown(InputEvent event, int keycode) {
+                if(keycode == Input.Keys.BACK && enabled) {
+                    m.goToMain();
+                    return true;
+                }
+                return false;
             }
         });
     }

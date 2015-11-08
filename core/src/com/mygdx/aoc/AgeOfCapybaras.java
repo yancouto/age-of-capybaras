@@ -1,10 +1,13 @@
 package com.mygdx.aoc;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 
 public class AgeOfCapybaras extends Game {
     @Override
     public void create() {
+        Gdx.input.setCatchBackKey(true);
+        Gdx.input.setCatchMenuKey(true);
         ResourceManager.init();
         ResourceManager.loadGame();
         this.setScreen(new MainMenuScreen(this));
