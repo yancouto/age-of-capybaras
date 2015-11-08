@@ -3,10 +3,10 @@ package com.mygdx.aoc;
 import com.badlogic.gdx.Game;
 
 public class AgeOfCapybaras extends Game {
-
-
     @Override
     public void create() {
+        ResourceManager.init();
+        ResourceManager.loadGame();
         this.setScreen(new MainMenuScreen(this));
     }
 
@@ -20,5 +20,14 @@ public class AgeOfCapybaras extends Game {
     public void dispose() {
         super.dispose();
         ResourceManager.dispose();
+    }
+
+    public static void onPause() {
+        ResourceManager.saveGame();
+    }
+
+    public static void onResume() {
+        if (ResourceManager.prefs != null)
+            User.addPast(ResourceManager.prefs.getLong("time", System.currentTimeMillis()));
     }
 }

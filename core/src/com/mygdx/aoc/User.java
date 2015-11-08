@@ -33,6 +33,14 @@ public class User {
         cpc = cpc.add(cpc.multiply(BigDecimal.TEN).add(BigDecimal.ONE)); // temporary
     }
 
+    static public void addPast(long prev) {
+        double d = (System.currentTimeMillis() - prev) / 1000.;
+        BigDecimal dt = new BigDecimal(d);
+        capybaras = capybaras.add(cps.multiply(dt));
+        kapivarium = kapivarium.add(kps.multiply(dt));
+        System.out.println(d + " seconds since last visit");
+    }
+
     static private final String unit = " kMGTPEZY";
     static public CharSequence toSmallString(BigInteger x) {
         String s = x.toString();
@@ -45,7 +53,8 @@ public class User {
         st.append('.');
         st.append(s, sz - u * 3, sz - u * 3 + 2);
         while(st.length() < 7) st.append(' ');
-        st.append(unit.charAt(sz / 3));
+        if (sz / 3 < unit.length()) st.append(unit.charAt(sz / 3));
+        else st.append("muito");
         return st;
     }
 }

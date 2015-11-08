@@ -8,6 +8,18 @@ import com.mygdx.aoc.AgeOfCapybaras;
 
 public class AndroidLauncher extends AndroidApplication {
     @Override
+    protected void onPause() {
+        super.onPause();
+        AgeOfCapybaras.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AgeOfCapybaras.onResume();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();

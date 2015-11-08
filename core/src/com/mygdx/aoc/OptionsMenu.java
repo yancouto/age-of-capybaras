@@ -2,12 +2,14 @@ package com.mygdx.aoc;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class OptionsMenu {
@@ -37,12 +39,24 @@ public class OptionsMenu {
         ss.knob.setMinHeight(1920 * .1f);
 
         Slider sl = new Slider(0, 100, 1, false, ss);
-        sl.setValue(50);
+        sl.setValue(ResourceManager.prefs.getInteger("soundVolume", 50));
+        sl.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ResourceManager.prefs.putInteger("soundVolume", (int) ((Slider) actor).getValue());
+            }
+        });
         table.add(sl).minSize(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
         table.row();
 
         sl = new Slider(0, 100, 1, false, ss);
-        sl.setValue(50);
+        sl.setValue(ResourceManager.prefs.getInteger("musicVolume", 50));
+        sl.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ResourceManager.prefs.putInteger("musicVolume", (int) ((Slider) actor).getValue());
+            }
+        });
         table.add(sl).minSize(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
         table.row();
 
