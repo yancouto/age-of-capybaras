@@ -73,8 +73,12 @@ public class OptionsMenu {
         table.add(b).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
         b.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                m.goToMain();
                 return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (event.getTarget().hit(x, y, true) == null) return;
+                m.goToMain();
             }
         });
         stage.addListener(new InputListener(){
@@ -91,6 +95,7 @@ public class OptionsMenu {
     public void render(float delta, Batch batch) {
         if (!enabled) return;
         stage.getBatch().begin();
+        // TODO: Fix this background, for some reason it is not working
         bg.draw(stage.getBatch(), 0, 0, 1080, 1920);
         back.draw(stage.getBatch(), 1080 * .1f, 1920 * .1f, 1080 * .8f, 1920 * .8f);
         stage.getBatch().end();

@@ -1,5 +1,7 @@
 package com.mygdx.aoc;
 
+import com.badlogic.gdx.Preferences;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -26,6 +28,38 @@ public class User {
             updateSecond();
             cps = cps.multiply(new BigDecimal(1.4)); // temporary
         }
+    }
+
+    private static class Data {
+        byte[] c, cps, cpc;
+        byte[] k, kps;
+
+        Data reset() {
+            c = User.capybaras.toBigInteger().toByteArray();
+            cps = User.cps.toBigInteger().toByteArray();
+            cpc = User.cpc.toBigInteger().toByteArray();
+            k = User.kapivarium.toBigInteger().toByteArray();
+            kps = User.kps.toBigInteger().toByteArray();
+            return this;
+        }
+    }
+
+    static public void saveGame() {
+        ResourceManager.prefs.putLong("time", System.currentTimeMillis());
+        ResourceManager.prefs.putString("userData", ResourceManager.json.toJson(new Data().reset()));
+    }
+
+    static public void loadGame() {
+        Preferences prefs = ResourceManager.prefs;
+        if (prefs.contains("userData")) {
+            Data d = ResourceManager.json.fromJson(Data.class, prefs.getString("data"));
+            capybaras = new BigDecimal(new BigInteger(d.c));
+            cps = new BigDecimal(new BigInteger(d.cps));
+            cpc = new BigDecimal(new BigInteger(d.cpc));
+            kapivarium = new BigDecimal(new BigInteger(d.k));
+            kps = new BigDecimal(new BigInteger(d.kps));
+        }
+        addPast(prefs.getLong("time", System.currentTimeMillis()));
     }
 
     static public void capybaraClick() {

@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -54,36 +55,49 @@ public class MainScreen implements Screen {
         accessory = new Button(ico[0]);
         accessory.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Going to Acessory");
-                goToAcessory();
                 return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (accessory.hit(x, y, true) == null) return;
+                System.out.println("Going to Accessory");
+                goToAcessory();
             }
         });
         option = new Button(ico[1]);
         option.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (option.hit(x, y, true) == null) return;
                 System.out.println("Going to Options");
                 goToOptions();
-                return true;
             }
         });
-        InputListener backListener = new InputListener() {
+        backAccessory = new Button(ico[2]);
+        backAccessory.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Going back");
-                goToMain();
                 return true;
             }
-        };
-        backAccessory = new Button(ico[2]);
-        backAccessory.addListener(backListener);
-        backOptions = new Button(ico[3]);
-        backOptions.addListener(backListener);
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (backAccessory.hit(x, y, true) == null) return;
+                System.out.println("Going back");
+                goToMain();
+            }
+        });
         ads = new Button(ico[4]);
         ads.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (ads.hit(x, y, true) == null) return;
                 System.out.println("Going to Ads");
                 goToAds();
-                return true;
             }
         });
 
@@ -110,15 +124,37 @@ public class MainScreen implements Screen {
                 if(keycode == Input.Keys.BACK && state != State.Main) {
                     goToMain();
                     return true;
+                } else if (keycode == Input.Keys.BACK && state == State.Main) {
+                    goToOptions();
+                    return true;
                 }
                 return false;
             }
         });
+
+        scrollUI();
+    }
+
+
+    private ScrollPane scrollPane;
+    private Table generators, upgrades;
+
+    private void scrollUI() {
+        generators = new Table();
+        for (Generator g : Generator.generators) {
+            generators.add(g);
+            generators.row();
+        }
+
+        scrollPane = new ScrollPane(generators);
+        scrollPane.setPosition(0, 0);
+        scrollPane.setSize(1080, 1920 * .3f);
+        stage.addActor(scrollPane);
     }
 
     private enum State {
         Main("Main Screen"),
-        Acessory("Acessory Screen"),
+        Accessory("Accessory Screen"),
         Options("Options Menu");
 
         String name;
@@ -155,7 +191,7 @@ public class MainScreen implements Screen {
     private void goToAcessory() {
         table.getCells().get(0).setActor(ads);
         table.getCells().get(1).setActor(backAccessory);
-        state = State.Acessory;
+        state = State.Accessory;
     }
 
     @Override
@@ -166,8 +202,8 @@ public class MainScreen implements Screen {
     @Override
     public void render(float delta) {
         if (hidden) return;
-        stage.getViewport().apply();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.getViewport().apply();
         stage.act(delta);
         stage.draw();
         stage.getBatch().begin();
