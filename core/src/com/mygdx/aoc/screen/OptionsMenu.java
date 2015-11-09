@@ -1,4 +1,4 @@
-package com.mygdx.aoc;
+package com.mygdx.aoc.screen;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.mygdx.aoc.ResourceManager;
 
 public class OptionsMenu {
     public boolean enabled = false;
@@ -96,6 +97,7 @@ public class OptionsMenu {
         if (!enabled) return;
         stage.getBatch().begin();
         // TODO: Fix this background, for some reason it is not working
+        stage.getBatch().setColor(Color.WHITE);
         bg.draw(stage.getBatch(), 0, 0, 1080, 1920);
         back.draw(stage.getBatch(), 1080 * .1f, 1920 * .1f, 1080 * .8f, 1920 * .8f);
         stage.getBatch().end();

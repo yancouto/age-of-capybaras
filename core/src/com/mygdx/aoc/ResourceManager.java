@@ -3,6 +3,7 @@ package com.mygdx.aoc;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -55,8 +56,11 @@ public class ResourceManager {
     }
 
     public static void loadMain() {
-        Texture t = new Texture(Gdx.files.internal("images/capybara.jpg"));
+        FileHandle f = Gdx.files.internal("images/capybara.png");
+        Texture t = new Texture(f);
         skin.add("capybara", t);
+        Pixmap pm = new Pixmap(f);
+        skin.add("capybaraMap", pm);
     }
 
     public static void dispose() {

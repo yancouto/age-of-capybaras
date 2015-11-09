@@ -1,4 +1,4 @@
-package com.mygdx.aoc;
+package com.mygdx.aoc.screen;
 
 
 import com.badlogic.gdx.Gdx;
@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
+import com.mygdx.aoc.AgeOfCapybaras;
+import com.mygdx.aoc.ResourceManager;
 
-public class MainMenuScreen implements Screen {
+public class Splash implements Screen {
     final private BitmapFont font;
     final private SpriteBatch batch;
     final private AgeOfCapybaras game;
@@ -17,7 +19,7 @@ public class MainMenuScreen implements Screen {
     private float total;
     private final float waitTime = 2.5f;
 
-    public MainMenuScreen(AgeOfCapybaras game) {
+    public Splash(AgeOfCapybaras game) {
         this.game = game;
         font = ResourceManager.skin.getFont("bigDog");
         batch = ResourceManager.batch;
