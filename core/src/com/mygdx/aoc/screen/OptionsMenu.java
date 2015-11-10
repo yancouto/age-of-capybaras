@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.mygdx.aoc.AgeOfCapybaras;
 import com.mygdx.aoc.ResourceManager;
 
 public class OptionsMenu {
@@ -20,8 +21,9 @@ public class OptionsMenu {
     public Stage stage;
     private Table table;
     private MainScreen m;
+    private LoreScreen loreScreen;
 
-    public OptionsMenu(Stage s, MainScreen ms) {
+    public OptionsMenu(Stage s, MainScreen ms, final AgeOfCapybaras g) {
         m = ms;
         bg = ResourceManager.skin.newDrawable("white", 0, 0, 0, .6f);
         back = ResourceManager.skin.newDrawable("white", Color.BROWN);
@@ -64,6 +66,17 @@ public class OptionsMenu {
 
         Button b = new Button(ResourceManager.skin.newDrawable("white", Color.GOLD));
         table.add(b).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
+        b.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (event.getTarget().hit(x, y, true) == null) return;
+                loreScreen = new LoreScreen();
+                g.setScreen(loreScreen);
+            }
+        });
         table.row();
 
         b = new Button(ResourceManager.skin.newDrawable("white", Color.GOLD));

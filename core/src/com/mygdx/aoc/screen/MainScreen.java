@@ -115,7 +115,7 @@ public class MainScreen implements Screen {
         table.add(option).maxSize(300).expandX().right().top().padRight(30).padTop(40);
 
         state = State.Main;
-        opt = new OptionsMenu(stage, this);
+        opt = new OptionsMenu(stage, this, g);
 
         stage.addListener(new InputListener(){
             public boolean keyDown(InputEvent event, int keycode) {
