@@ -16,8 +16,6 @@ import com.badlogic.gdx.utils.Json;
 public class ResourceManager {
     public static Skin skin;
     public static SpriteBatch batch;
-    public static FreeTypeFontGenerator fontGenDog;
-    public static FreeTypeFontGenerator.FreeTypeFontParameter fontPar;
     public static Preferences prefs;
 
     public static void init() {
@@ -27,17 +25,33 @@ public class ResourceManager {
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
-        skin.add("white", new Texture(pixmap));
+        skin.add("pixel", new Texture(pixmap));
 
 
         batch = new SpriteBatch();
-        fontGenDog = new FreeTypeFontGenerator(Gdx.files.internal("fonts/good_dog.ttf"));
-        fontPar = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        fontPar.size = 200;
-        fontPar.borderWidth = 3;
-        BitmapFont font = fontGenDog.generateFont(fontPar);
-        skin.add("bigDog", font);
+        processFont("goodDog", 3);
         skin.add("badlogic", new Texture(Gdx.files.internal("badlogic.jpg")));
+    }
+
+    private static void processFont(String name, int borderWidth) {
+        FreeTypeFontGenerator fontGen = new FreeTypeFontGenerator(Gdx.files.internal("fonts/" + name + ".ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter fontPar = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        fontPar.borderWidth = borderWidth;
+        skin.add(name + "FontGen", fontGen);
+        skin.add(name + "FontPar", fontPar);
+    }
+
+    public static BitmapFont getFont(String name, int size) {
+        String full = name + size;
+        if (skin.has(full, BitmapFont.class))
+            return skin.getFont(full);
+        FreeTypeFontGenerator fontGen = skin.get(name + "FontGen", FreeTypeFontGenerator.class);
+        FreeTypeFontGenerator.FreeTypeFontParameter fontPar = skin.get(name + "FontPar",
+                FreeTypeFontGenerator.FreeTypeFontParameter.class);
+        fontPar.size = size;
+        BitmapFont font = fontGen.generateFont(fontPar);
+        skin.add(full, font);
+        return font;
     }
 
 
@@ -65,7 +79,6 @@ public class ResourceManager {
 
     public static void dispose() {
         batch.dispose();
-        fontGenDog.dispose();
         skin.dispose();
     }
 }

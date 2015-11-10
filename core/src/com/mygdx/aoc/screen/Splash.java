@@ -21,7 +21,7 @@ public class Splash implements Screen {
 
     public Splash(AgeOfCapybaras game) {
         this.game = game;
-        font = ResourceManager.skin.getFont("bigDog");
+        font = ResourceManager.getFont("goodDog", 180);
         batch = ResourceManager.batch;
         total = 0.f;
 

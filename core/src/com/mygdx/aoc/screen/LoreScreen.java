@@ -23,7 +23,7 @@ public class LoreScreen implements Screen {
     public LoreScreen() {
         stage = new Stage(new FitViewport(1080, 1920));
         table = new Table();
-        font = ResourceManager.skin.getFont("bigDog");
+        font = ResourceManager.getFont("goodDog", 200);
         batch = ResourceManager.batch;
 
         Gdx.input.setInputProcessor(stage);

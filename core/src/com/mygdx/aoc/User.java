@@ -5,42 +5,88 @@ import com.badlogic.gdx.Preferences;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+/**
+ * Static class used to keep User variables, like the number o capybaras and
+ * kapivarium avaiable.
+ */
 public class User {
+    /**
+     * Variables for capybaras counting
+     */
     static public BigDecimal capybaras, cps, cpc;
+    /**
+     * Variables for kapivarium counting
+     */
     static public BigDecimal kapivarium, kps;
     static public String[] power_name = {"thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion", "quindecillion", "sexdecillion", "septendecillion", "octadecillion", "novemdecillion", "vigintillion", "unvigintillion", "duovigintillion", "trevigintillion", "quattuorvigintillion", "quinvigintillion", "sexvigintillion", "septenvigintillion", "octavigintillion", "novemvigintillion", "trigintillion", "untrigintillion", "duotrigintillion", "tretrigintillion", "quattuortrigintillion", "quintrigintillion", "sextrigintillion", "septentrigintillion", "octatrigintillion", "novemtrigintillion", "quadragintillion", "unquadragintillion", "duoquadragintillion", "trequadragintillion", "quattuorquadragintillion", "quinquadragintillion", "sexquadragintillion", "septenquadragintillion", "octaquadragintillion", "novemquadragintillion", "quinquagintillion", "unquinquagintillion", "duoquinquagintillion", "trequinquagintillion", "quattuorquinquagintillion", "quinquinquagintillion", "sexquinquagintillion", "septenquinquagintillion", "octaquinquagintillion", "novemquinquagintillion", "sexagintillion", "unsexagintillion", "duosexagintillion", "tresexagintillion", "quattuorsexagintillion", "quinsexagintillion", "sexsexagintillion", "septensexagintillion", "octasexagintillion", "novemsexagintillion", "septuagintillion", "unseptuagintillion", "duoseptuagintillion", "treseptuagintillion", "quattuorseptuagintillion", "quinseptuagintillion", "sexseptuagintillion", "septenseptuagintillion", "octaseptuagintillion", "novemseptuagintillion", "octagintillion", "unoctogintillion", "duooctogintillion", "treoctogintillion", "quattuoroctogintillion", "quinoctogintillion", "sexoctogintillion", "septenoctogintillion", "octaoctogintillion", "novemoctogintillion", "nonagintillion", "unnonagintillion", "duononagintillion", "trenonagintillion", "quattuornonagintillion", "quinnonagintillion", "sexnonagintillion", "septennonagintillion", "octanonagintillion", "novemnonagintillion", "centillion", "cenuntillion", "cendotillion", "centretillion", "cenquattuortillion", "cenquintillion", "censextillion", "censeptentillion", "cenoctotillion", "cennovemtillion", "cendecillion", "cenundecillion", "cendodecillion", "centredecillion", "cenquattuordecillion", "cenquindecillion", "censexdecillion", "censeptendecillion", "cenoctodecillion", "cennovemdecillion", "cenvigintillion", "cenunvigintillion", "cendovigintillion", "centrevigintillion", "cenquattuorvigintillion", "cenquinvigintillion", "censexvigintillion", "censeptenvigintillion", "cenoctovigintillion", "cennovemvigintillion", "centrigintillion", "cenuntrigintillion", "cendotrigintillion", "centretrigintillion", "cenquattuortrigintillion", "cenquintrigintillion", "censextrigintillion", "censeptentrigintillion", "cenoctotrigintillion", "cennovemtrigintillion", "cenquadragintillion", "cenunquadragintillion", "cendoquadragintillion", "centrequadragintillion", "cenquattuorquadragintillion", "cenquinquadragintillion", "censexquadragintillion", "censeptenquadragintillion", "cenoctoquadragintillion", "cennovemquadragintillion", "cenquinquagintillion", "cenunquinquagintillion", "cendoquinquagintillion", "centrequinquagintillion", "cenquattuorquinquagintillion", "cenquinquinquagintillion", "censexquinquagintillion", "censeptenquinquagintillion", "cenoctoquinquagintillion", "cennovemquinquagintillion", "censexagintillion", "cenunsexagintillion", "cendosexagintillion", "centresexagintillion", "cenquattuorsexagintillion", "cenquinsexagintillion", "censexsexagintillion", "censeptensexagintillion", "cenoctosexagintillion", "cennovemsexagintillion", "censeptuagintillion", "cenunseptuagintillion", "cendoseptuagintillion", "centreseptuagintillion", "cenquattuorseptuagintillion", "cenquinseptuagintillion", "censexseptuagintillion", "censeptenseptuagintillion", "cenoctoseptuagintillion", "cennovemseptuagintillion", "cenoctogintillion", "cenunoctogintillion", "cendooctogintillion", "centreoctogintillion", "cenquattuoroctogintillion", "cenquinoctogintillion", "censexoctogintillion", "censeptenoctogintillion", "cenoctooctogintillion", "cennovemoctogintillion", "cennonagintillion", "cenunnonagintillion", "cendononagintillion", "centrenonagintillion", "cenquattuornonagintillion", "cenquinnonagintillion", "censexnonagintillion", "censeptennonagintillion", "cenoctononagintillion", "cennovemnonagintillion", "duocentillion", "duocenuntillion", "duocendotillion", "duocentretillion", "duocenquattuortillion", "duocenquintillion", "duocensextillion", "duocenseptentillion", "duocenoctotillion", "duocennovemtillion", "duocendecillion", "duocenundecillion", "duocendodecillion", "duocentredecillion", "duocenquattuordecillion", "duocenquindecillion", "duocensexdecillion", "duocenseptendecillion", "duocenoctodecillion", "duocennovemdecillion", "duocenvigintillion", "duocenunvigintillion", "duocendovigintillion", "duocentrevigintillion", "duocenquattuorvigintillion", "duocenquinvigintillion", "duocensexvigintillion", "duocenseptenvigintillion", "duocenoctovigintillion", "duocennovemvigintillion", "duocentrigintillion", "duocenuntrigintillion", "duocendotrigintillion", "duocentretrigintillion", "duocenquattuortrigintillion", "duocenquintrigintillion", "duocensextrigintillion", "duocenseptentrigintillion", "duocenoctotrigintillion", "duocennovemtrigintillion", "duocenquadragintillion", "duocenunquadragintillion", "duocendoquadragintillion", "duocentrequadragintillion", "duocenquattuorquadragintillion", "duocenquinquadragintillion", "duocensexquadragintillion", "duocenseptenquadragintillion", "duocenoctoquadragintillion", "duocennovemquadragintillion", "duocenquinquagintillion", "duocenunquinquagintillion", "duocendoquinquagintillion", "duocentrequinquagintillion", "duocenquattuorquinquagintillion", "duocenquinquinquagintillion", "duocensexquinquagintillion", "duocenseptenquinquagintillion", "duocenoctoquinquagintillion", "duocennovemquinquagintillion", "duocensexagintillion", "duocenunsexagintillion", "duocendosexagintillion", "duocentresexagintillion", "duocenquattuorsexagintillion", "duocenquinsexagintillion", "duocensexsexagintillion", "duocenseptensexagintillion", "duocenoctosexagintillion", "duocennovemsexagintillion", "duocenseptuagintillion", "duocenunseptuagintillion", "duocendoseptuagintillion", "duocentreseptuagintillion", "duocenquattuorseptuagintillion", "duocenquinseptuagintillion", "duocensexseptuagintillion", "duocenseptenseptuagintillion", "duocenoctoseptuagintillion", "duocennovemseptuagintillion", "duocenoctogintillion", "duocenunoctogintillion", "duocendooctogintillion", "duocentreoctogintillion", "duocenquattuoroctogintillion", "duocenquinoctogintillion", "duocensexoctogintillion", "duocenseptenoctogintillion", "duocenoctooctogintillion", "duocennovemoctogintillion", "duocennonagintillion", "duocenunnonagintillion", "duocendononagintillion", "duocentrenonagintillion", "duocenquattuornonagintillion", "duocenquinnonagintillion", "duocensexnonagintillion", "duocenseptennonagintillion", "duocenoctononagintillion", "duocennovemnonagintillion"};
-    static private float cur = 0.f;
 
     static {
         capybaras = cps = cpc = BigDecimal.TEN;
         kapivarium = kps = BigDecimal.ZERO;
     }
 
-    static private void updateSecond() {
-    }
+    static private float cur1 = 0.f, cur20 = 0.f;
 
+    /**
+     * Called each update so capybaras, kapivarium and other User stats can be updated
+     *
+     * @param dt the delta time since last call
+     */
     static public void update(float dt) {
         BigDecimal delta = new BigDecimal(dt);
         capybaras = capybaras.add(cps.multiply(delta));
         kapivarium = kapivarium.add(kps.multiply(delta));
-        cur += dt;
-        if (cur >= 1) {
-            cur -= 1;
-            updateSecond();
+        cur1 += dt;
+        if (cur1 >= 1) {
+            cur1 -= 1;
             cps = cps.multiply(new BigDecimal(1.4)); // temporary
+        }
+        cur20 += dt;
+        if (cur20 >= 20) {
+            cur20 -= 20;
+            ResourceManager.saveGame();
         }
     }
 
+    /**
+     * Helper class to store user data using Android's Preferences
+     *
+     * @see User#loadGame()
+     * @see User#saveGame()
+     */
+    private static class Data {
+        String c, cps, cpc;
+        String k, kps;
+
+        Data reset() {
+            c = User.capybaras.toBigInteger().toString();
+            cps = User.cps.toBigInteger().toString();
+            cpc = User.cpc.toBigInteger().toString();
+            k = User.kapivarium.toBigInteger().toString();
+            kps = User.kps.toBigInteger().toString();
+            return this;
+        }
+    }
+
+    /**
+     * Saves user data
+     *
+     * @see ResourceManager#saveGame()
+     */
     static public void saveGame() {
         ResourceManager.prefs.putLong("time", System.currentTimeMillis());
         ResourceManager.prefs.putString("userData", ResourceManager.json.toJson(new Data().reset()));
     }
 
+    /**
+     * Loads user data
+     *
+     * @see ResourceManager#loadGame()
+     */
     static public void loadGame() {
-        if (true) return;
         Preferences prefs = ResourceManager.prefs;
         if (prefs.contains("userData")) {
-            Data d = ResourceManager.json.fromJson(Data.class, prefs.getString("data"));
+            Data d = ResourceManager.json.fromJson(Data.class, prefs.getString("userData"));
             capybaras = new BigDecimal(new BigInteger(d.c));
             cps = new BigDecimal(new BigInteger(d.cps));
             cpc = new BigDecimal(new BigInteger(d.cpc));
@@ -50,11 +96,19 @@ public class User {
         addPast(prefs.getLong("time", System.currentTimeMillis()));
     }
 
+    /**
+     * Simulates the click o the Matriarch Capybara
+     */
     static public void capybaraClick() {
         capybaras = capybaras.add(cpc);
         cpc = cpc.add(cpc.multiply(BigDecimal.TEN).add(BigDecimal.ONE)); // temporary
     }
 
+    /**
+     * Adds Capybara that should be added assuming you left the device at time {@code prev}
+     * and the game kept running
+     * @param prev time the user left the game
+     */
     static public void addPast(long prev) {
         double d = (System.currentTimeMillis() - prev) / 1000.;
         BigDecimal dt = new BigDecimal(d);
@@ -97,23 +151,11 @@ public class User {
         return st;
     }
 
+    /**
+     * @see User#toSmallString(BigInteger, int)
+     */
     static public CharSequence toSmallString(BigInteger x) {
         return toSmallString(x, 1);
     }
-
-    private static class Data {
-        byte[] c, cps, cpc;
-        byte[] k, kps;
-
-        Data reset() {
-            c = User.capybaras.toBigInteger().toByteArray();
-            cps = User.cps.toBigInteger().toByteArray();
-            cpc = User.cpc.toBigInteger().toByteArray();
-            k = User.kapivarium.toBigInteger().toByteArray();
-            kps = User.kps.toBigInteger().toByteArray();
-            return this;
-        }
-    }
-
 
 }

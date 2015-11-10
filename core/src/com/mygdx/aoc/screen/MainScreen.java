@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -22,30 +21,30 @@ import com.mygdx.aoc.Generator;
 import com.mygdx.aoc.ResourceManager;
 import com.mygdx.aoc.User;
 
+/**
+ * Main game screen, where the Matriarch Capybara is and most mechanics will be used.
+ */
 public class MainScreen implements Screen {
-    final AgeOfCapybaras g;
+    final AgeOfCapybaras game;
     private Stage stage;
     private Table table;
     private BitmapFont font;
     private State state;
-    private boolean hidden = false;
 
     private Button option, accessory, ads, backAccessory;
-    private Drawable capybara, backgroundColor;
+    private Drawable capybara, pixel;
     private Pixmap capybaraMap;
 
-    private com.mygdx.aoc.screen.OptionsMenu opt;
+    private OptionsMenu optionsMenu;
 
     public MainScreen(AgeOfCapybaras game) {
-        g = game;
+        this.game = game;
         ResourceManager.loadMain();
-        ResourceManager.fontPar.size = 100;
-        font = ResourceManager.fontGenDog.generateFont(ResourceManager.fontPar);
+        font = ResourceManager.getFont("goodDog", 100);
 
         OrthographicCamera cam = new OrthographicCamera();
         cam.setToOrtho(false, 1080, 1920);
         stage = new Stage(new FitViewport(1080, 1920, cam), ResourceManager.batch);
-        Gdx.input.setInputProcessor(stage);
 
         table = new Table();
         table.setFillParent(true);
@@ -54,7 +53,6 @@ public class MainScreen implements Screen {
         stage.addActor(table);
 
         table.top();
-        Drawable bad = ResourceManager.skin.getDrawable("badlogic");
         Color[] colors = {Color.FIREBRICK, Color.BLUE, Color.CYAN, Color.FOREST, Color.GOLD};
         Drawable[] ico = new Drawable[5];
         for (int i = 0; i < colors.length; i++)
@@ -68,7 +66,7 @@ public class MainScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (accessory.hit(x, y, true) == null) return;
                 System.out.println("Going to Accessory");
-                goToAcessory();
+                goToAccessory();
             }
         });
         option = new Button(ico[1]);
@@ -80,7 +78,7 @@ public class MainScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (option.hit(x, y, true) == null) return;
                 System.out.println("Going to Options");
-                goToOptions();
+                MainScreen.this.game.setScreen(optionsMenu);
             }
         });
         backAccessory = new Button(ico[2]);
@@ -115,15 +113,15 @@ public class MainScreen implements Screen {
         table.add(option).maxSize(300).expandX().right().top().padRight(30).padTop(40);
 
         state = State.Main;
-        opt = new OptionsMenu(stage, this, g);
+        optionsMenu = new OptionsMenu(stage, this);
 
-        stage.addListener(new InputListener(){
+        stage.addListener(new InputListener() {
             public boolean keyDown(InputEvent event, int keycode) {
-                if(keycode == Input.Keys.BACK && state != State.Main) {
+                if (keycode == Input.Keys.BACK && state != State.Main) {
                     goToMain();
                     return true;
                 } else if (keycode == Input.Keys.BACK && state == State.Main) {
-                    goToOptions();
+                    MainScreen.this.game.setScreen(optionsMenu);
                     return true;
                 }
                 return false;
@@ -131,13 +129,13 @@ public class MainScreen implements Screen {
         });
 
         scrollUI();
-        backgroundColor = ResourceManager.skin.newDrawable("white", .9f, 1, .9f, 1);
+        pixel = ResourceManager.skin.getDrawable("pixel");
     }
 
-
     private ScrollPane scrollPane;
-    private Table generators, upgrades;
 
+
+    private Table generators, upgrades;
     /**
      * Creates the UI for the generators and upgrades
      * Maybe accessories will also be here
@@ -160,39 +158,32 @@ public class MainScreen implements Screen {
      */
     private enum State {
         Main("Main Screen"),
-        Accessory("Accessory Screen"),
-        Options("Options Menu");
+        Accessory("Accessory Screen");
 
         String name;
+
         State(String s) {
             name = s;
         }
-    }
-
-    private void goToOptions() {
-        accessory.setTouchable(Touchable.disabled);
-        option.setTouchable(Touchable.disabled);
-        opt.enabled = true;
-        Gdx.input.setInputProcessor(opt.stage);
-        state = State.Options;
     }
 
     private void goToAds() {
         System.out.println("Not Yet Implemented");
     }
 
+    /**
+     * Changes the screen to the Main screen
+     */
     public void goToMain() {
-        System.out.println("going to main");
-        accessory.setTouchable(Touchable.enabled);
-        option.setTouchable(Touchable.enabled);
         table.getCells().get(0).setActor(accessory);
         table.getCells().get(1).setActor(option);
-        Gdx.input.setInputProcessor(stage);
-        opt.enabled = false;
         state = State.Main;
     }
 
-    private void goToAcessory() {
+    /**
+     * Changes the screen to the Accessory screen
+     */
+    private void goToAccessory() {
         table.getCells().get(0).setActor(ads);
         table.getCells().get(1).setActor(backAccessory);
         state = State.Accessory;
@@ -200,17 +191,19 @@ public class MainScreen implements Screen {
 
     @Override
     public void show() {
-        hidden = false;
+        Gdx.input.setInputProcessor(stage);
     }
+
+    private Color backgroundColor = new Color(.9f, 1, .9f, 1);
 
     @Override
     public void render(float delta) {
-        if (hidden) return;
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.getViewport().apply();
 
         stage.getBatch().begin();
-        backgroundColor.draw(stage.getBatch(), 0, 0, 1080, 1920);
+        stage.getBatch().setColor(backgroundColor);
+        pixel.draw(stage.getBatch(), 0, 0, 1080, 1920);
         stage.getBatch().end();
 
         stage.act(delta);
@@ -221,13 +214,14 @@ public class MainScreen implements Screen {
         font.draw(stage.getBatch(), state.name, 50, 350);
         font.draw(stage.getBatch(), User.toSmallString(User.capybaras.toBigInteger()), 50, 200);
         stage.getBatch().end();
-        opt.render(delta, stage.getBatch());
 
         if(state == State.Main && Gdx.input.justTouched()) {
-            float x = Gdx.input.getX(), y = Gdx.input.getY();
-            int color = capybaraMap.getPixel((int)(x * capybaraMap.getWidth() / 1080), (int)(y * capybaraMap.getHeight() / 1920));
+            int x = Gdx.input.getX(), y = Gdx.input.getY();
+            x = (x * capybaraMap.getWidth()) / Gdx.graphics.getWidth();
+            y = (y * capybaraMap.getHeight()) / Gdx.graphics.getHeight();
+            int color = capybaraMap.getPixel(x, y);
             // alpha != 0
-            if((color & (255 << 24)) != 0) User.capybaraClick();
+            if ((color & 0xff) != 0) User.capybaraClick();
         }
 
         User.update(delta);
@@ -240,17 +234,14 @@ public class MainScreen implements Screen {
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-        hidden = true;
     }
 
     @Override

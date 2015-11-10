@@ -1,15 +1,28 @@
 package com.mygdx.aoc;
 
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
+/**
+ * Implements Generator logic.
+ * Each generator can be upgrade by paying some amount of Capybaras, and it
+ * generates some CPS. After some number of upgrades (most usually 100) you
+ * get a boost for that particular Generator.
+ * +----------------------+
+ * |.Name......|   _____  |
+ * |.Quantity..|  | $$$ | |
+ * |.CPS.......|  |_____| |
+ * +----------------------+
+ */
 public class Generator extends Widget {
-    private Drawable background;
+    private Drawable pixel;
     private BitmapFont font;
     public final String name;
+    private int currentLevel = 33;
 
     // TODO: Decide how generators will "scale"
     @Override
@@ -19,35 +32,61 @@ public class Generator extends Widget {
 
     @Override
     public float getPrefHeight() {
-        return 1920 * .1f;
+        return 1920 * .125f;
     }
+
+    private Color backColor, fillColor;
 
     public Generator(String name) {
         this.name = name;
-        background = ResourceManager.skin.newDrawable("white", Util.randomColor());
-        ResourceManager.fontPar.size = 100;
-        if (!ResourceManager.skin.has("bigDog100", BitmapFont.class)) {
-            font = ResourceManager.fontGenDog.generateFont(ResourceManager.fontPar);
-            ResourceManager.skin.add("bigDog100", font);
-        } else font = ResourceManager.skin.getFont("bigDog100");
+        pixel = ResourceManager.skin.getDrawable("pixel");
+
+        float a = (float) Math.random(), b = (float) Math.random(), c = (float) Math.random();
+        float mult1 = 1.25f / (a + b + c), mult2 = 2.f / (a + b + c);
+        backColor = new Color(a * mult1, b * mult1, c * mult1, 1);
+        fillColor = new Color(a * mult2, b * mult2, c * mult2, 1);
+
+
+        font = ResourceManager.getFont("goodDog", 80);
+
         Preferences prefs = ResourceManager.prefs;
         if (prefs.contains(name + "generator")) {
             // TODO: read generator info
         }
     }
 
+    /**
+     * Saves this generator's data
+     *
+     * @see #saveGame()
+     */
     private void save() {
         // TODO: write generator info
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        background.draw(batch, getX(), getY(), getWidth(), getHeight());
-        font.draw(batch, name, getX() + 50, getY() + (font.getLineHeight() + getHeight()) / 2.f);
+        batch.setColor(backColor);
+        pixel.draw(batch, getX(), getY(), getWidth(), getHeight());
+        batch.setColor(fillColor);
+        pixel.draw(batch, getX(), getY(), getWidth() * (currentLevel % 100) / 100.f, getHeight());
+        float c2 = font.getLineHeight() / 2.f;
+        float h4 = getHeight() / 4.f;
+        font.draw(batch, "X CPS", getX() + 50, getY() + h4 + c2 - getHeight() / 20.f);
+        font.draw(batch, String.valueOf(currentLevel), getX() + 50, getY() + h4 * 2.f + c2);
+        font.draw(batch, name, getX() + 50, getY() + h4 * 3.f + c2 + getHeight() / 20.f);
     }
 
+    /**
+     * All generator instances
+     */
     public static Generator[] generators;
 
+    /**
+     * Loads generators instances and initializes them
+     *
+     * @see ResourceManager#loadGame()
+     */
     public static void loadGame() {
         String[] gs = {"Hydrochoerus Hive", "Capybara Colony",
                 "Matriarch Mitosis", "Human Field", "Time Machine"};
@@ -56,6 +95,10 @@ public class Generator extends Widget {
             generators[i] = new Generator(gs[i]);
     }
 
+    /**
+     * Saves generators data
+     * @see ResourceManager#saveGame()
+     */
     public static void saveGame() {
         for (Generator g : generators)
             g.save();
