@@ -4,6 +4,9 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.aoc.screen.Splash;
 
+/**
+ * Main class, initializes all basic stuff and then creates the SplashScreen
+ */
 public class AgeOfCapybaras extends Game {
     @Override
     public void create() {
