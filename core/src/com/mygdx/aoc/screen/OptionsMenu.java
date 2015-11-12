@@ -68,6 +68,8 @@ public class OptionsMenu implements Screen {
 
         Button b = new Button(ResourceManager.skin.newDrawable("pixel", Color.GOLD));
         table.add(b).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
+        table.row();
+        loreScreen = new LoreScreen(this, mainScreen);
         b.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -75,11 +77,11 @@ public class OptionsMenu implements Screen {
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (event.getTarget().hit(x, y, true) == null) return;
-                loreScreen = new LoreScreen();
+                System.out.println("Going to Lore");
+//                loreScreen = new LoreScreen(OptionsMenu.this, mainScreen);
                 mainScreen.game.setScreen(loreScreen);
             }
         });
-        table.row();
 
         b = new Button(ResourceManager.skin.newDrawable("pixel", Color.GOLD));
         table.add(b).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
@@ -113,6 +115,7 @@ public class OptionsMenu implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        stage.getViewport().apply();
         stage.getBatch().begin();
         stage.getBatch().setColor(backgroundColor);
         pixel.draw(stage.getBatch(), 0, 0, 1080, 1920);

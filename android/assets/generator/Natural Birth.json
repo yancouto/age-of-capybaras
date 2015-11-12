@@ -1,0 +1,7 @@
+{
+  initialCost: 0,
+  firstCost: 15,
+  firstWin: 1,
+  growth: 1.1,
+  seed: 1212121
+}

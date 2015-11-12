@@ -45,6 +45,7 @@ public class MainScreen implements Screen {
         OrthographicCamera cam = new OrthographicCamera();
         cam.setToOrtho(false, 1080, 1920);
         stage = new Stage(new FitViewport(1080, 1920, cam), ResourceManager.batch);
+        optionsMenu = new OptionsMenu(stage, this);
 
         table = new Table();
         table.setFillParent(true);
@@ -113,7 +114,6 @@ public class MainScreen implements Screen {
         table.add(option).maxSize(300).expandX().right().top().padRight(30).padTop(40);
 
         state = State.Main;
-        optionsMenu = new OptionsMenu(stage, this);
 
         stage.addListener(new InputListener() {
             public boolean keyDown(InputEvent event, int keycode) {
@@ -211,8 +211,7 @@ public class MainScreen implements Screen {
         stage.getBatch().begin();
         stage.getBatch().setColor(Color.WHITE);
         capybara.draw(stage.getBatch(), 0, 0, 1080, 1920);
-        font.draw(stage.getBatch(), state.name, 50, 350);
-        font.draw(stage.getBatch(), User.toSmallString(User.capybaras.toBigInteger()), 50, 200);
+        font.draw(stage.getBatch(), User.toSmallString(User.capybaras.toBigInteger(), 3), 300, 1920 * .95f);
         stage.getBatch().end();
 
         if(state == State.Main && Gdx.input.justTouched()) {
