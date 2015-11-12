@@ -118,6 +118,14 @@ public class User {
     }
 
     /**
+     * Adds {@code num} CPS to the current CPS
+     * @param num CPS to add
+     */
+    static public void addCPS(BigDecimal num) {
+        cps = cps.add(num);
+    }
+
+    /**
      * No description
      *
      * @param n number of digits of cps

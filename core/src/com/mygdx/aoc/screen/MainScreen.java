@@ -211,8 +211,7 @@ public class MainScreen implements Screen {
         stage.getBatch().begin();
         stage.getBatch().setColor(Color.WHITE);
         capybara.draw(stage.getBatch(), 0, 0, 1080, 1920);
-        font.draw(stage.getBatch(), state.name, 50, 350);
-        font.draw(stage.getBatch(), User.toSmallString(User.capybaras.toBigInteger()), 50, 200);
+        font.draw(stage.getBatch(), User.toSmallString(User.capybaras.toBigInteger(), 3), 300, 1920 * .95f);
         stage.getBatch().end();
 
         if(state == State.Main && Gdx.input.justTouched()) {
