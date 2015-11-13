@@ -1,49 +1,51 @@
 package com.mygdx.aoc.android;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+
 import com.mygdx.aoc.AgeOfCapybaras;
 
 public class AndroidLauncher extends AndroidApplication {
-    private InterstitialAd mInterstitialAd;
+
+    public AdManager adM; // AdManager usage example
 
     @Override
     protected void onPause() {
-//        Request an ad
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-//        Um id gerado para uma conta no AdMob deve ser colado no lugar de
-//        AdRequest.DEVICE_ID_EMULATOR entre aspas quando o aplicativo estiver
-//        pronto para ir para a Play Store.
-        mInterstitialAd.loadAd(adRequest);
+
+        adM.requestAd(); // AdManager usage example
+
         super.onPause();
         AgeOfCapybaras.onPause();
     }
 
     @Override
     protected void onResume() {
-//        Check that an ad is loaded and then display it
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
         super.onResume();
+
+        double time;                            //
+        adM.displayAd();                        //
+        time = adM.elapsedTime();               // AdManager usage example
+        if (time >= 20)                         //
+            Log.v("ETime", "Time = " + time);   //
+
         AgeOfCapybaras.onResume();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        Construct an InterstitialAd object.
+        adM = new AdManager();              // AdManager usage example
+        adM.init(new InterstitialAd(this)); // This context is necessary
+
         AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
         config.useCompass = false;
         config.useAccelerometer = false;
-//        Construct an InterstitialAd object and set its ad unit ID.
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712"); //Outro Id que precisa ser criado pelo AdMob.
         initialize(new AgeOfCapybaras(), config);
     }
 }
