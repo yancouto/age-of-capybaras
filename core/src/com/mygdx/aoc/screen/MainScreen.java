@@ -36,7 +36,9 @@ public class MainScreen implements Screen {
     private Pixmap capybaraMap;
 
     private OptionsMenu optionsMenu;
-
+    private ScrollPane scrollPane;
+    private Table generators, upgrades;
+    private Color backgroundColor = new Color(.9f, 1, .9f, 1);
     public MainScreen(AgeOfCapybaras game) {
         this.game = game;
         ResourceManager.loadMain();
@@ -132,10 +134,6 @@ public class MainScreen implements Screen {
         pixel = ResourceManager.skin.getDrawable("pixel");
     }
 
-    private ScrollPane scrollPane;
-
-
-    private Table generators, upgrades;
     /**
      * Creates the UI for the generators and upgrades
      * Maybe accessories will also be here
@@ -151,20 +149,6 @@ public class MainScreen implements Screen {
         scrollPane.setPosition(0, 0);
         scrollPane.setSize(1080, 1920 * .3f);
         stage.addActor(scrollPane);
-    }
-
-    /**
-     * Used to identify the current screen state
-     */
-    private enum State {
-        Main("Main Screen"),
-        Accessory("Accessory Screen");
-
-        String name;
-
-        State(String s) {
-            name = s;
-        }
     }
 
     private void goToAds() {
@@ -194,17 +178,11 @@ public class MainScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
     }
 
-    private Color backgroundColor = new Color(.9f, 1, .9f, 1);
-
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0f, 0f, .2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.getViewport().apply();
-
-        stage.getBatch().begin();
-        stage.getBatch().setColor(backgroundColor);
-        pixel.draw(stage.getBatch(), 0, 0, 1080, 1920);
-        stage.getBatch().end();
 
         stage.act(delta);
         stage.draw();
@@ -214,7 +192,7 @@ public class MainScreen implements Screen {
         font.draw(stage.getBatch(), User.toSmallString(User.capybaras.toBigInteger(), 3), 300, 1920 * .95f);
         stage.getBatch().end();
 
-        if(state == State.Main && Gdx.input.justTouched()) {
+        if (state == State.Main && Gdx.input.justTouched()) {
             int x = Gdx.input.getX(), y = Gdx.input.getY();
             x = (x * capybaraMap.getWidth()) / Gdx.graphics.getWidth();
             y = (y * capybaraMap.getHeight()) / Gdx.graphics.getHeight();
@@ -247,5 +225,19 @@ public class MainScreen implements Screen {
     public void dispose() {
         stage.dispose();
         font.dispose();
+    }
+
+    /**
+     * Used to identify the current screen state
+     */
+    private enum State {
+        Main("Main Screen"),
+        Accessory("Accessory Screen");
+
+        String name;
+
+        State(String s) {
+            name = s;
+        }
     }
 }
