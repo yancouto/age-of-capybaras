@@ -3,8 +3,8 @@ package com.mygdx.aoc;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
+import com.mygdx.aoc.manager.ResourceManager;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -78,7 +78,7 @@ public class User {
                 powerName[i++] = scanner.nextLine();
             reader.close();
             scanner.close();
-        } catch (IOException error) {
+        } catch (Exception e) {
             System.err.println("Cannot read powers of ten.");
             powerName = new String[1];
             powerName[0] = "";
@@ -136,9 +136,14 @@ public class User {
      * @return the string witch contains the value of cps spelled out
      */
     static public CharSequence toBla(int n) {
+        if (n < 4) return "";
         int b = n / 3;
         if (n % 3 == 0) b--;
         return powerName[Math.min(b - 1, powerName.length - 1)];
+    }
+
+    static public CharSequence toBla(BigInteger x) {
+        return toBla(x.toString().length());
     }
 
     /**
@@ -158,8 +163,6 @@ public class User {
         st.append(s, 0, size - uni * 3);
         st.append('.');
         st.append(s, size - uni * 3, Math.min(size, size - uni * 3 + dec));
-        st.append(' ');
-        st.append(toBla(size));
         return st;
     }
 

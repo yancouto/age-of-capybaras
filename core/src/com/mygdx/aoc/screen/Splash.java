@@ -2,25 +2,23 @@ package com.mygdx.aoc.screen;
 
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Align;
-import com.mygdx.aoc.AgeOfCapybaras;
-import com.mygdx.aoc.ResourceManager;
+import com.mygdx.aoc.manager.GameScreen;
+import com.mygdx.aoc.manager.ResourceManager;
+import com.mygdx.aoc.manager.ScreenManager;
 
-public class Splash implements Screen {
+public class Splash implements GameScreen {
     final private BitmapFont font;
     final private SpriteBatch batch;
-    final private AgeOfCapybaras game;
+    private final float waitTime = 2.5f;
     OrthographicCamera cam;
     private float total;
-    private final float waitTime = 2.5f;
 
-    public Splash(AgeOfCapybaras game) {
-        this.game = game;
+    public Splash() {
         font = ResourceManager.getFont("goodDog", 180);
         batch = ResourceManager.batch;
         total = 0.f;
@@ -30,10 +28,17 @@ public class Splash implements Screen {
     }
 
     @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.1f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    public InputProcessor processor() {
+        return null;
+    }
 
+    @Override
+    public boolean blocksInput() {
+        return false;
+    }
+
+    @Override
+    public void render(float delta) {
         cam.update();
         batch.setProjectionMatrix(cam.combined);
 
@@ -44,7 +49,9 @@ public class Splash implements Screen {
 
         total += delta;
         if(total > waitTime || Gdx.input.isTouched()) {
-            game.setScreen(new MainScreen(game));
+            while (ScreenManager.popScreen() != this) ;
+            ScreenManager.pushScreen(CapybaraScreen.instance());
+            ScreenManager.pushScreen(MainScreen.instance());
             dispose();
         }
     }

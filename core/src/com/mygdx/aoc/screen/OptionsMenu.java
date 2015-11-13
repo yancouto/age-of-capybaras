@@ -1,10 +1,8 @@
 package com.mygdx.aoc.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -14,22 +12,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.mygdx.aoc.ResourceManager;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.aoc.manager.GameScreen;
+import com.mygdx.aoc.manager.ResourceManager;
+import com.mygdx.aoc.manager.ScreenManager;
 
 /**
  * Menu where volume can be changed, lore can be seen, and other options can be tweaked.
  */
-public class OptionsMenu implements Screen {
-    private Drawable pixel;
+public class OptionsMenu implements GameScreen {
+    private static OptionsMenu optionsMenu;
+    private final Color backgroundColor = Color.DARK_GRAY;
     public Stage stage;
-    private LoreScreen loreScreen;
-    private MainScreen mainScreen;
+    private Drawable pixel;
 
-    public OptionsMenu(Stage s, MainScreen ms) {
-        mainScreen = ms;
+    private OptionsMenu() {
         pixel = ResourceManager.skin.getDrawable("pixel");
 
-        stage = new Stage(s.getViewport(), s.getBatch());
+        stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
         Table table = new Table();
         table.setFillParent(true);
         table.setDebug(true);
@@ -69,7 +69,6 @@ public class OptionsMenu implements Screen {
         Button b = new Button(ResourceManager.skin.newDrawable("pixel", Color.GOLD));
         table.add(b).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
         table.row();
-        loreScreen = new LoreScreen(this, mainScreen);
         b.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -79,7 +78,8 @@ public class OptionsMenu implements Screen {
                 if (event.getTarget().hit(x, y, true) == null) return;
                 System.out.println("Going to Lore");
 //                loreScreen = new LoreScreen(OptionsMenu.this, mainScreen);
-                mainScreen.game.setScreen(loreScreen);
+                while (ScreenManager.popScreen() != OptionsMenu.this) ;
+                ScreenManager.pushScreen(LoreScreen.instance());
             }
         });
 
@@ -96,13 +96,17 @@ public class OptionsMenu implements Screen {
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (event.getTarget().hit(x, y, true) == null) return;
-                mainScreen.game.setScreen(mainScreen);
+                while (ScreenManager.popScreen() != OptionsMenu.this) ;
+                ScreenManager.pushScreen(CapybaraScreen.instance());
+                ScreenManager.pushScreen(MainScreen.instance());
             }
         });
-        stage.addListener(new InputListener(){
+        stage.addListener(new InputListener() {
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.BACK) {
-                    mainScreen.game.setScreen(mainScreen);
+                    while (ScreenManager.popScreen() != OptionsMenu.this) ;
+                    ScreenManager.pushScreen(CapybaraScreen.instance());
+                    ScreenManager.pushScreen(MainScreen.instance());
                     return true;
                 }
                 return false;
@@ -110,17 +114,23 @@ public class OptionsMenu implements Screen {
         });
     }
 
-    private final Color backgroundColor = Color.DARK_GRAY;
+    public static OptionsMenu instance() {
+        if (optionsMenu == null) optionsMenu = new OptionsMenu();
+        return optionsMenu;
+    }
+
+    @Override
+    public InputProcessor processor() {
+        return stage;
+    }
+
+    @Override
+    public boolean blocksInput() {
+        return true;
+    }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.getViewport().apply();
-        stage.getBatch().begin();
-        stage.getBatch().setColor(backgroundColor);
-        pixel.draw(stage.getBatch(), 0, 0, 1080, 1920);
-        stage.getBatch().end();
-
         stage.getViewport().apply();
         stage.act(delta);
         stage.draw();
@@ -141,7 +151,6 @@ public class OptionsMenu implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override

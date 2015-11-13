@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.mygdx.aoc.manager.ResourceManager;
 
 import java.math.BigDecimal;
 import java.util.Random;
@@ -38,41 +39,16 @@ import java.util.Random;
  * After every 100th update, this Generator CPS will be multiplied by 2
  */
 public class Generator extends Widget {
+    /**
+     * All generator instances
+     */
+    public static Generator[] generators;
     private static Drawable pixel;
-    private BitmapFont fontSmall, fontBig;
     public final String name;
+    private BitmapFont fontSmall, fontBig;
     private BigDecimal initialCost, currentCost, currentCPS, growth;
     private Random random;
     private int currentLevel;
-
-    @Override
-    public float getPrefWidth() {
-        return 1080;
-    }
-
-    @Override
-    public float getPrefHeight() {
-        return 1920 * .125f;
-    }
-
-    private static class GeneratorData {
-        String initialCost, firstCost, firstWin, growth;
-        long seed;
-
-        public void copyTo(Generator g) {
-            g.random = new Random(seed);
-            g.currentLevel = 0;
-            g.initialCost = new BigDecimal(initialCost);
-            g.currentCPS = BigDecimal.ZERO;
-            g.currentCost = new BigDecimal(firstCost);
-            g.currentCPS = new BigDecimal(firstWin);
-            g.growth = new BigDecimal(growth);
-        }
-
-        public GeneratorData() {
-        }
-    }
-
     private Color backColor, fillColor;
 
     public Generator(String name) {
@@ -92,6 +68,39 @@ public class Generator extends Widget {
         int cur = prefs.getInteger(name + "Generator", 0);
         while (currentLevel < cur)
             buyLevel();
+    }
+
+    /**
+     * Loads generators instances and initializes them
+     *
+     * @see ResourceManager#loadGame()
+     */
+    public static void loadGame() {
+        pixel = ResourceManager.skin.getDrawable("pixel");
+        String[] gs = {"Natural Birth"};
+        generators = new Generator[gs.length];
+        for (int i = 0; i < gs.length; i++)
+            generators[i] = new Generator(gs[i]);
+    }
+
+    /**
+     * Saves generators data
+     *
+     * @see ResourceManager#saveGame()
+     */
+    public static void saveGame() {
+        for (Generator g : generators)
+            g.save();
+    }
+
+    @Override
+    public float getPrefWidth() {
+        return 1080;
+    }
+
+    @Override
+    public float getPrefHeight() {
+        return 1920 * .125f;
     }
 
     /**
@@ -135,31 +144,21 @@ public class Generator extends Widget {
         }
     }
 
-    /**
-     * All generator instances
-     */
-    public static Generator[] generators;
+    private static class GeneratorData {
+        String initialCost, firstCost, firstWin, growth;
+        long seed;
 
-    /**
-     * Loads generators instances and initializes them
-     *
-     * @see ResourceManager#loadGame()
-     */
-    public static void loadGame() {
-        pixel = ResourceManager.skin.getDrawable("pixel");
-        String[] gs = {"Natural Birth"};
-        generators = new Generator[gs.length];
-        for (int i = 0; i < gs.length; i++)
-            generators[i] = new Generator(gs[i]);
-    }
+        public GeneratorData() {
+        }
 
-    /**
-     * Saves generators data
-     *
-     * @see ResourceManager#saveGame()
-     */
-    public static void saveGame() {
-        for (Generator g : generators)
-            g.save();
+        public void copyTo(Generator g) {
+            g.random = new Random(seed);
+            g.currentLevel = 0;
+            g.initialCost = new BigDecimal(initialCost);
+            g.currentCPS = BigDecimal.ZERO;
+            g.currentCost = new BigDecimal(firstCost);
+            g.currentCPS = new BigDecimal(firstWin);
+            g.growth = new BigDecimal(growth);
+        }
     }
 }

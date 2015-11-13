@@ -1,10 +1,8 @@
 
 package com.mygdx.aoc.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,24 +11,26 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.aoc.Generator;
-import com.mygdx.aoc.ResourceManager;
+import com.mygdx.aoc.manager.GameScreen;
+import com.mygdx.aoc.manager.ResourceManager;
+import com.mygdx.aoc.manager.ScreenManager;
 
-public class LoreScreen implements Screen {
-    private Stage stage;
+public class LoreScreen implements GameScreen {
+    private static LoreScreen lore;
     final private BitmapFont font;
     final private SpriteBatch batch;
+    private Stage stage;
     private Table table;
-    private MainScreen mainScreen;
-    private OptionsMenu optionsMenu;
+    private ScrollPane scrollPane;
+    private Table lores;
 
-    public LoreScreen(OptionsMenu opt, MainScreen ms) {
-        stage = new Stage(opt.stage.getViewport(), opt.stage.getBatch());
+    private LoreScreen() {
+        stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
         table = new Table();
         font = ResourceManager.getFont("goodDog", 200);
         batch = ResourceManager.batch;
-        mainScreen = ms;
-        optionsMenu = opt;
 
         table.setFillParent(true);
         table.setDebug(true);
@@ -40,7 +40,8 @@ public class LoreScreen implements Screen {
         stage.addListener(new InputListener() {
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.BACK) {
-                    mainScreen.game.setScreen(optionsMenu);
+                    while (ScreenManager.popScreen() != LoreScreen.this) ;
+                    ScreenManager.pushScreen(OptionsMenu.instance());
                     return true;
                 }
                 return false;
@@ -50,8 +51,10 @@ public class LoreScreen implements Screen {
         scrollUI();
     }
 
-    private ScrollPane scrollPane;
-    private Table lores;
+    public static LoreScreen instance() {
+        if (lore == null) lore = new LoreScreen();
+        return lore;
+    }
 
     // TODO: Replace Generator class with Lore class when it's done
     private void scrollUI() {
@@ -67,7 +70,6 @@ public class LoreScreen implements Screen {
     }
 
     public void render (float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 //         Just to have some graphical feedback
         batch.begin();
         font.draw(batch, "Lore description goes here",
@@ -101,5 +103,16 @@ public class LoreScreen implements Screen {
     }
 
     @Override
-    public void show () { Gdx.input.setInputProcessor(stage); }
+    public void show() {
+    }
+
+    @Override
+    public boolean blocksInput() {
+        return false;
+    }
+
+    @Override
+    public InputProcessor processor() {
+        return stage;
+    }
 }

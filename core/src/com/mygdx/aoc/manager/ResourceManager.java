@@ -1,4 +1,4 @@
-package com.mygdx.aoc;
+package com.mygdx.aoc.manager;
 
 
 import com.badlogic.gdx.Gdx;
@@ -12,11 +12,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json;
+import com.mygdx.aoc.AgeOfCapybaras;
+import com.mygdx.aoc.Generator;
+import com.mygdx.aoc.User;
 
 public class ResourceManager {
     public static Skin skin;
     public static SpriteBatch batch;
     public static Preferences prefs;
+    public static AgeOfCapybaras game;
+    public static Json json = new Json();
 
     public static void init() {
         prefs = Gdx.app.getPreferences("default");
@@ -54,9 +59,6 @@ public class ResourceManager {
         return font;
     }
 
-
-    public static Json json = new Json();
-
     public static void saveGame() {
         if (prefs == null) return;
         User.saveGame();
@@ -69,7 +71,7 @@ public class ResourceManager {
         Generator.loadGame();
     }
 
-    public static void loadMain() {
+    public static void loadCapybara() {
         FileHandle f = Gdx.files.internal("images/capybara.png");
         Texture t = new Texture(f);
         skin.add("capybara", t);
