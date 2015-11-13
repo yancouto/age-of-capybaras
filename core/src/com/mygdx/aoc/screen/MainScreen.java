@@ -3,6 +3,8 @@ package com.mygdx.aoc.screen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,6 +19,8 @@ import com.mygdx.aoc.manager.GameScreen;
 import com.mygdx.aoc.manager.ResourceManager;
 import com.mygdx.aoc.manager.ScreenManager;
 
+import java.math.BigInteger;
+
 /**
  * Main game screen, where the Matriarch Capybara is and most mechanics will be used.
  */
@@ -27,9 +31,13 @@ public class MainScreen implements GameScreen {
     private Button option, accessory;
     private ScrollPane scrollPane;
     private Table generators, upgrades;
+    private BitmapFont numberFont, nameFont;
 
     private MainScreen() {
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
+
+        numberFont = ResourceManager.getFont("goodDog", 185);
+        nameFont = ResourceManager.getFont("goodDog", 70);
 
         table = new Table();
         table.setFillParent(true);
@@ -126,6 +134,13 @@ public class MainScreen implements GameScreen {
     @Override
     public void render(float delta) {
         stage.getViewport().apply();
+
+        Batch batch = stage.getBatch();
+        batch.begin();
+        BigInteger cap = User.capybaras.toBigInteger();
+        numberFont.draw(batch, User.toSmallString(cap, 3), 315, 1920 * .91f);
+        nameFont.draw(batch, User.toBla(cap), 250, 1920 * .83f);
+        batch.end();
 
         stage.act(delta);
         stage.draw();

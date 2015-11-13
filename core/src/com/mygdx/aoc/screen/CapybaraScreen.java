@@ -6,18 +6,14 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.mygdx.aoc.User;
 import com.mygdx.aoc.manager.GameScreen;
 import com.mygdx.aoc.manager.ResourceManager;
 import com.mygdx.aoc.manager.ScreenManager;
-
-import java.math.BigInteger;
 
 /**
  * Screen where the Matriarch Capybara is
@@ -27,7 +23,6 @@ public class CapybaraScreen implements GameScreen {
     private Stage stage;
     private Drawable capybara, pixel;
     private Pixmap capybaraMap;
-    private BitmapFont numberFont, nameFont;
 
     private CapybaraScreen() {
         ResourceManager.loadCapybara();
@@ -36,9 +31,6 @@ public class CapybaraScreen implements GameScreen {
         capybara = ResourceManager.skin.getDrawable("capybara");
         capybaraMap = ResourceManager.skin.get("capybaraMap", Pixmap.class);
         pixel = ResourceManager.skin.getDrawable("pixel");
-        numberFont = ResourceManager.getFont("goodDog", 100);
-        nameFont = ResourceManager.getFont("goodDog", 70);
-
 
         stage.addListener(new InputListener() {
             public boolean keyDown(InputEvent event, int keycode) {
@@ -80,9 +72,6 @@ public class CapybaraScreen implements GameScreen {
         b.begin();
         b.setColor(Color.WHITE);
         capybara.draw(b, 0, 0, 1080, 1920);
-        BigInteger cap = User.capybaras.toBigInteger();
-        numberFont.draw(b, User.toSmallString(cap, 3), 300, 1920 * .95f);
-        nameFont.draw(b, User.toBla(cap), 200, 1920 * .9f);
         b.end();
     }
 
