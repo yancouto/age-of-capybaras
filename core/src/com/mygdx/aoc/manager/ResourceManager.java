@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Json;
 import com.mygdx.aoc.AgeOfCapybaras;
 import com.mygdx.aoc.Generator;
 import com.mygdx.aoc.User;
+import com.mygdx.aoc.Lore;
 
 public class ResourceManager {
     public static Skin skin;
@@ -69,6 +70,7 @@ public class ResourceManager {
     public static void loadGame() {
         User.loadGame();
         Generator.loadGame();
+        Lore.loadGame();
     }
 
     public static void loadCapybara() {
