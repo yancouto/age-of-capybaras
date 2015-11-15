@@ -1,0 +1,7 @@
+{
+  "initialCost": 3333333,
+  "firstCost": 4444444,
+  "firstWin": 555,
+  "growth": 1.2,
+  "seed": 1234567
+}

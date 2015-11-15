@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -20,9 +21,12 @@ import com.mygdx.aoc.manager.ScreenManager;
  */
 public class CapybaraScreen implements GameScreen {
     private static CapybaraScreen capybaraScreen;
+    private static int curAge;
+    private static Texture back;
     private Stage stage;
     private Drawable capybara, pixel;
     private Pixmap capybaraMap;
+
 
     private CapybaraScreen() {
         ResourceManager.loadCapybara();
@@ -44,9 +48,32 @@ public class CapybaraScreen implements GameScreen {
         });
     }
 
+    public static void loadGame() {
+        curAge = ResourceManager.prefs.getInteger("gameAge", 1);
+        updateAge();
+    }
+
+    public static void saveGame() {
+        ResourceManager.prefs.putInteger("gameAge", curAge);
+    }
+
     public static CapybaraScreen instance() {
         if (capybaraScreen == null) capybaraScreen = new CapybaraScreen();
         return capybaraScreen;
+    }
+
+    public static int currentAge() {
+        return curAge;
+    }
+
+    public static void advanceAge() {
+        curAge++;
+        updateAge();
+    }
+
+    private static void updateAge() {
+        if (back != null) back.dispose();
+        back = new Texture(Gdx.files.internal(String.format("eras/era%02d.png", curAge)));
     }
 
     @Override
@@ -71,6 +98,7 @@ public class CapybaraScreen implements GameScreen {
         Batch b = stage.getBatch();
         b.begin();
         b.setColor(Color.WHITE);
+        b.draw(back, 0, 0, 1080, 1920);
         capybara.draw(b, 0, 0, 1080, 1920);
         b.end();
     }
@@ -97,7 +125,7 @@ public class CapybaraScreen implements GameScreen {
 
     @Override
     public void dispose() {
-
+        back.dispose();
     }
 
     public boolean touchesCapybara() {

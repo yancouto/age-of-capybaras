@@ -24,10 +24,11 @@ public class User {
      */
     static public BigDecimal kapivarium, kps;
     static public String[] powerName;
-    static private float cur1 = 0.f, cur20 = 0.f;
+    static private float cur20 = 0.f;
 
     static {
-        capybaras = cps = cpc = BigDecimal.TEN;
+        capybaras = cps = BigDecimal.ZERO;
+        cpc = BigDecimal.TEN;
         kapivarium = kps = BigDecimal.ZERO;
     }
 
@@ -40,11 +41,6 @@ public class User {
         BigDecimal delta = new BigDecimal(dt);
         capybaras = capybaras.add(cps.multiply(delta));
         kapivarium = kapivarium.add(kps.multiply(delta));
-        cur1 += dt;
-        if (cur1 >= 1) {
-            cur1 -= 1;
-            cps = cps.multiply(new BigDecimal(1.4)); // temporary
-        }
         cur20 += dt;
         if (cur20 >= 20) {
             cur20 -= 20;
@@ -105,7 +101,6 @@ public class User {
      */
     static public void capybaraClick() {
         capybaras = capybaras.add(cpc);
-        cpc = cpc.add(cpc.multiply(BigDecimal.TEN).add(BigDecimal.ONE)); // temporary
     }
 
     /**

@@ -1,0 +1,7 @@
+{
+  "initialCost": 1000,
+  "firstCost": 3000,
+  "firstWin": 50,
+  "growth": 1.5,
+  "seed": 1337
+}

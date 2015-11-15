@@ -27,12 +27,9 @@ public class LoreScreen implements GameScreen {
     private ArrayList<TextButton> disabledButtons = new ArrayList<TextButton>();
     private TextButton currentAgeButton, checkedButton;
 
-    // TODO: Make this variable global and save it in some place
-    private int curAge = 2;
-
     private Label.LabelStyle labelStyle =
             new Label.LabelStyle(ResourceManager.getFont("goodDog", 70), Color.WHITE);
-    final private Label description = new Label(findLoreDescription(curAge), labelStyle);
+    final private Label description = new Label(findLoreDescription(CapybaraScreen.currentAge()), labelStyle);
 
     private TextButton.TextButtonStyle textButtonStyle;
 
@@ -77,7 +74,7 @@ public class LoreScreen implements GameScreen {
 
         for (Lore l : Lore.lores) {
             final TextButton b;
-            if (l.getLoreAge() > curAge) {
+            if (l.getLoreAge() > CapybaraScreen.currentAge()) {
                 b = new TextButton(l.getLoreAge() + ". ?????", textButtonStyle);
                 b.setDisabled(true);
                 disabledButtons.add(b);
@@ -96,11 +93,10 @@ public class LoreScreen implements GameScreen {
                         checkedButton.setChecked(false);
                         b.setChecked(true);
                         checkedButton = b;
-                        curAge++;
                     }
                 }
             });
-            if (l.getLoreAge() == curAge) {
+            if (l.getLoreAge() == CapybaraScreen.currentAge()) {
                 b.setChecked(true);
                 currentAgeButton = b;
                 checkedButton = b;
@@ -136,11 +132,11 @@ public class LoreScreen implements GameScreen {
     private void updateEnable() {
         for (TextButton b : disabledButtons) {
             int i = Integer.parseInt(b.getText().toString().split("\\.\\s")[0]);
-            if (i <= curAge) {
+            if (i <= CapybaraScreen.currentAge()) {
                 b.setDisabled(false);
                 b.setStyle(textButtonStyle);
                 b.setText(i + ". " + findLoreName(i));
-                if (i == curAge)
+                if (i == CapybaraScreen.currentAge())
                     currentAgeButton = b;
                 //disabled.remove(b);  To avoid ERROR: java.util.ConcurrentModificationException
             }
@@ -148,10 +144,10 @@ public class LoreScreen implements GameScreen {
         checkedButton.setChecked(false);
         currentAgeButton.setChecked(true);
         checkedButton = currentAgeButton;
-        description.setText(findLoreDescription(curAge));
+        description.setText(findLoreDescription(CapybaraScreen.currentAge()));
         System.out.print(scrollPaneLores.getMaxY());
-        if (curAge > 2)
-            scrollPaneLores.setScrollY((curAge - 2) * 1920 * .0775f );
+        if (CapybaraScreen.currentAge() > 2)
+            scrollPaneLores.setScrollY((CapybaraScreen.currentAge() - 2) * 1920 * .0775f);
     }
 
     @Override

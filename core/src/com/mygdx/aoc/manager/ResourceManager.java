@@ -14,8 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json;
 import com.mygdx.aoc.AgeOfCapybaras;
 import com.mygdx.aoc.Generator;
-import com.mygdx.aoc.User;
 import com.mygdx.aoc.Lore;
+import com.mygdx.aoc.User;
+import com.mygdx.aoc.screen.CapybaraScreen;
 
 public class ResourceManager {
     public static Skin skin;
@@ -64,10 +65,12 @@ public class ResourceManager {
         if (prefs == null) return;
         User.saveGame();
         Generator.saveGame();
+        CapybaraScreen.saveGame();
         prefs.flush();
     }
 
     public static void loadGame() {
+        CapybaraScreen.loadGame();
         User.loadGame();
         Generator.loadGame();
         Lore.loadGame();
