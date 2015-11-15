@@ -59,9 +59,8 @@ public class MainScreen implements GameScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (accessory.hit(x, y, true) == null) return;
                 System.out.println("Going to Accessory");
-                // TODO: Implement AccessoryScreen
-//                while(ScreenManager.popScreen() != MainScreen.this);
-//                ScreenManager.pushScreen(AccessoryScreen.instance());
+                while(ScreenManager.popScreen() != MainScreen.this);
+                ScreenManager.pushScreen(AccessoryScreen.instance());
             }
         });
         option = new Button(ico[1]);
@@ -101,7 +100,6 @@ public class MainScreen implements GameScreen {
                 return false;
             }
         });
-
         scrollUI();
     }
 
