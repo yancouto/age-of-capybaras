@@ -1,7 +1,5 @@
 package com.mygdx.aoc;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,7 +12,7 @@ import java.util.Random;
 
 public class Accessory extends Widget {
     /**
-     * All accessory instances
+     * All accessory instances (almost a Generator copy)
      */
     public static Accessory[] accessories;
     private static Drawable pixel;
@@ -29,10 +27,11 @@ public class Accessory extends Widget {
     public Accessory(String name, Integer type) {
         this.name = name;
         this.type = type;
+//        TODO: Make json saving and loading control
 //        ResourceManager.json2.fromJson(AccessoryData.class, Gdx.files.internal("accessory/" + name + ".json")).copyTo(this);
-
-        backColor = new Color(Color.BLUE);
-        fillColor = new Color(Color.GREEN);
+//        TODO: Find good colors
+        backColor = new Color(Color.ORANGE);
+        fillColor = new Color(Color.RED);
 
         fontSmall = ResourceManager.getFont("goodDog", 80);
         fontBig = ResourceManager.getFont("goodDog", 100);
@@ -46,8 +45,8 @@ public class Accessory extends Widget {
      */
     public static void loadGame() {
         pixel = ResourceManager.skin.getDrawable("pixel");
-        String[] ac = {"Hatbara", "CAPbara", "Helmet", "Face"};
-        Integer[] ty = {1, 1, 0, 2};
+        String[] ac = {"Hatbara", "CAPbara", "Helmet1", "Helmet2", "Face1", "Face2"};
+        Integer[] ty = {1, 1, 0, 0, 2, 2};
         accessories = new Accessory[ac.length];
         for (int i = 0; i < ac.length; i++)
             accessories[i] = new Accessory(ac[i], ty[i]);

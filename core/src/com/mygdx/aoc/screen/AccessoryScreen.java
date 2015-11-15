@@ -9,8 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.aoc.Accessory;
@@ -30,11 +32,13 @@ public class AccessoryScreen implements GameScreen {
     private Table table, tabs;
     private Button option, back;
     private Button helmet, head, face;
+    private ButtonGroup tabsGroup;
     private ScrollPane scrollPaneHelmet, scrollPaneHead, scrollPaneFace;
     private Table accHelmet, accHead, accFace;
     private BitmapFont numberFont, nameFont;
 
     private AccessoryScreen() {
+
 //        Same as main screen from here...
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
 
@@ -102,9 +106,19 @@ public class AccessoryScreen implements GameScreen {
                 return false;
             }
         });
-//        ...to here
+//        ...to here.
 
-        helmet = new Button(ico[1]);
+        TextButton.TextButtonStyle textButtonStyle;
+        textButtonStyle = new TextButton.TextButtonStyle(
+//                TODO: Find good colors
+                ResourceManager.skin.newDrawable("pixel", Color.GOLD), // up
+                ResourceManager.skin.newDrawable("pixel", Color.GOLDENROD), // down
+                ResourceManager.skin.newDrawable("pixel", Color.ORANGE), // check
+                ResourceManager.getFont("goodDog", Math.round(1920 * .065f)));
+        textButtonStyle.disabled = ResourceManager.skin.newDrawable("pixel", Color.LIGHT_GRAY);
+        textButtonStyle.disabledFontColor = Color.LIGHT_GRAY;
+
+        helmet = new TextButton("Helmet", textButtonStyle);
         helmet.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -118,7 +132,7 @@ public class AccessoryScreen implements GameScreen {
             }
         });
 
-        head = new Button(ico[1]);
+        head = new TextButton("Head", textButtonStyle);
         head.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -132,7 +146,7 @@ public class AccessoryScreen implements GameScreen {
             }
         });
 
-        face = new Button(ico[1]);
+        face = new TextButton("Face", textButtonStyle);
         face.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -146,15 +160,23 @@ public class AccessoryScreen implements GameScreen {
             }
         });
 
+        helmet.setChecked(true);
+        head.setChecked(false);
+        face.setChecked(false);
+
+        tabsGroup = new ButtonGroup(helmet, head, face);
+        tabsGroup.setMaxCheckCount(1);
+        tabsGroup.setMinCheckCount(1);
+
         tabs = new Table();
         tabs.setFillParent(true);
         tabs.setDebug(true);
         stage.addActor(tabs);
 
         tabs.bottom();
-        tabs.add(helmet).maxSize(200).center().bottom().padRight(45).padLeft(45).padBottom(1920 * .2f).padTop(0);
-        tabs.add(head).maxSize(200).center().bottom().padRight(45).padLeft(45).padBottom(1920 * .2f).padTop(0);
-        tabs.add(face).maxSize(200).center().bottom().padRight(45).padLeft(45).padBottom(1920 * .2f).padTop(0);
+        tabs.add(helmet).maxSize(350).center().bottom().padRight(10).padLeft(40).padBottom(1920 * .2f).padTop(0).width(350);
+        tabs.add(head).maxSize(350).center().bottom().padRight(10).padLeft(10).padBottom(1920 * .2f).padTop(0).width(350);
+        tabs.add(face).maxSize(350).center().bottom().padRight(40).padLeft(10).padBottom(1920 * .2f).padTop(0).width(350);
 
         scrollUI();
     }
