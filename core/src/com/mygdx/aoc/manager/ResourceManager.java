@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json;
+import com.mygdx.aoc.Accessory;
 import com.mygdx.aoc.AgeOfCapybaras;
 import com.mygdx.aoc.Generator;
 import com.mygdx.aoc.Lore;
@@ -66,6 +67,7 @@ public class ResourceManager {
         User.saveGame();
         Generator.saveGame();
         CapybaraScreen.saveGame();
+        Accessory.saveGame();
         prefs.flush();
     }
 
@@ -74,6 +76,7 @@ public class ResourceManager {
         User.loadGame();
         Generator.loadGame();
         Lore.loadGame();
+        Accessory.loadGame();
     }
 
     public static void loadCapybara() {
