@@ -56,6 +56,7 @@ public class Generator extends Widget {
     private int currentLevel;
     private Color backColor, fillColor;
     private Rectangle buyButton = new Rectangle();
+    private boolean buttonHeld = false;
     private BigDecimal multiplier = new BigDecimal("1.1");
 
     public Generator(FileHandle file) {
@@ -80,15 +81,18 @@ public class Generator extends Widget {
         addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Hey you clicked " + name + " at (" + x + ", " + y + ")");
-                return buyButton.contains(x, y);
+                BigDecimal cost = currentLevel == 0 ? initialCost : currentCost;
+                if (!buttonHeld && buyButton.contains(x, y) && cost.compareTo(User.capybaras) <= 0)
+                    buttonHeld = true;
+                return buttonHeld;
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (buyButton.contains(x, y))
+                if (buttonHeld && buyButton.contains(x, y))
                     buyLevel(true);
+                buttonHeld = false;
             }
         });
-
     }
 
     /**
@@ -164,11 +168,11 @@ public class Generator extends Widget {
         pixel.draw(batch, getX(), getY(), getWidth(), getHeight());
         batch.setColor(fillColor);
         float h4 = getHeight() / 4.f;
-        BigInteger cost;
+        BigDecimal cost;
         float s2 = fontSmall.getLineHeight() / 2.f, t2 = fontTiny.getLineHeight() / 2.f;
         if (currentLevel == 0) {
             fontSmall.draw(batch, name, getX() + 50, getY() + s2 + h4 * 2.f);
-            cost = initialCost.toBigInteger();
+            cost = initialCost;
         } else {
             pixel.draw(batch, getX(), getY(), getWidth() * (currentLevel % 100) / 100.f, getHeight());
             fontSmall.draw(batch, "Lvl: " + currentLevel, getX() + 50, getY() + h4 * 2.f + s2);
@@ -176,14 +180,18 @@ public class Generator extends Widget {
             fontSmall.draw(batch, User.toSmallString(cps, 1), getX() + 50, getY() + h4 + s2 - getHeight() / 20.f);
             fontTiny.draw(batch, User.toBla(cps) + " CPS", getX() + 200, getY() + h4 + t2 - getHeight() / 20.f);
             fontSmall.draw(batch, name, getX() + 50, getY() + h4 * 3.f + s2 + getHeight() / 20.f);
-            cost = currentCost.toBigInteger();
+            cost = currentCost;
         }
-        batch.setColor(Color.LIME);
         buyButton.set(getWidth() * .55f, h4 * .75f, 400, h4 * 2.5f);
+        Color buttonColor = Color.GREEN;
+        if (buttonHeld) buttonColor = Color.LIME;
+        else if (User.capybaras.compareTo(cost) < 0) buttonColor = Color.GRAY;
+        batch.setColor(buttonColor);
         pixel.draw(batch, getX() + buyButton.x, getY() + buyButton.y, buyButton.width, buyButton.height);
         batch.setColor(Color.WHITE);
-        fontSmall.draw(batch, User.toSmallString(cost, 3), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .7f + s2);
-        fontTiny.draw(batch, User.toBla(cost), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .25f + t2);
+        BigInteger intCost = cost.toBigInteger();
+        fontSmall.draw(batch, User.toSmallString(intCost, 3), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .7f + s2);
+        fontTiny.draw(batch, User.toBla(intCost), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .25f + t2);
     }
 
     private static class GeneratorData {

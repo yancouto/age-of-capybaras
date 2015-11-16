@@ -3,13 +3,16 @@ package com.mygdx.aoc.screen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -22,27 +25,23 @@ import com.mygdx.aoc.manager.ScreenManager;
  */
 public class OptionsMenu implements GameScreen {
     private static OptionsMenu optionsMenu;
-    private final Color backgroundColor = Color.DARK_GRAY;
     public Stage stage;
+    private Drawable background;
     private Drawable pixel;
 
     private OptionsMenu() {
+        background = ResourceManager.skin.getDrawable("configBackground");
         pixel = ResourceManager.skin.getDrawable("pixel");
 
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
         Table table = new Table();
         table.setFillParent(true);
-        table.setDebug(true);
         stage.addActor(table);
+        table.center();
 
-        Slider.SliderStyle ss = new Slider.SliderStyle(ResourceManager.skin.newDrawable("pixel", Color.BROWN),
-                ResourceManager.skin.newDrawable("pixel", Color.GOLD));
-        ss.background = ResourceManager.skin.newDrawable("pixel", Color.OLIVE);
-        ss.background.setMinWidth(1080 * .6f);
-        ss.background.setMinHeight(1920 * .07f);
-        ss.knob = ResourceManager.skin.newDrawable("pixel", Color.BLACK);
-        ss.knob.setMinWidth(1080 * .02f);
-        ss.knob.setMinHeight(1920 * .1f);
+        Slider.SliderStyle ss = new Slider.SliderStyle(ResourceManager.skin.getDrawable("sliderSlider"),
+                ResourceManager.skin.getDrawable("sliderKnob"));
+        ss.knobDown = ResourceManager.skin.newDrawable("sliderKnob", Color.DARK_GRAY);
 
         Slider sl = new Slider(0, 100, 1, false, ss);
         sl.setValue(ResourceManager.prefs.getInteger("soundVolume", 50));
@@ -52,7 +51,9 @@ public class OptionsMenu implements GameScreen {
                 ResourceManager.prefs.putInteger("soundVolume", (int) ((Slider) actor).getValue());
             }
         });
-        table.add(sl).minSize(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
+        table.add(new Image(ResourceManager.skin.getDrawable("soundEmpty"))).padRight(50);
+        table.add(sl).size(1080 * .5f, 1920 * .1f).left();
+        table.add(new Image(ResourceManager.skin.getDrawable("soundFull"))).padLeft(50);
         table.row();
 
         sl = new Slider(0, 100, 1, false, ss);
@@ -63,11 +64,17 @@ public class OptionsMenu implements GameScreen {
                 ResourceManager.prefs.putInteger("musicVolume", (int) ((Slider) actor).getValue());
             }
         });
-        table.add(sl).minSize(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
+        table.add(new Image(ResourceManager.skin.getDrawable("musicEmpty"))).padRight(50);
+        table.add(sl).size(1080 * .5f, 1920 * .1f).left();
+        table.add(new Image(ResourceManager.skin.getDrawable("musicFull"))).padLeft(50);
         table.row();
 
-        Button b = new Button(ResourceManager.skin.newDrawable("pixel", Color.GOLD));
-        table.add(b).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
+        TextButton.TextButtonStyle bs = new TextButton.TextButtonStyle();
+        bs.up = ResourceManager.skin.newDrawable("pixel", .5f, .5f, .5f, 1.f);
+        bs.over = ResourceManager.skin.newDrawable("pixel", .3f, .3f, .3f, 1.f);
+        bs.font = ResourceManager.getFont("goodDog", 100);
+        Button b = new TextButton("Lore", bs);
+        table.add(b).colspan(3).size(1080 * .6f, 1920 * .1f).pad(1920 * .05f, 0, 1920 * .025f, 0);
         table.row();
         b.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -77,18 +84,17 @@ public class OptionsMenu implements GameScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (event.getTarget().hit(x, y, true) == null) return;
                 System.out.println("Going to Lore");
-//                loreScreen = new LoreScreen(OptionsMenu.this, mainScreen);
                 while (ScreenManager.popScreen() != OptionsMenu.this) ;
                 ScreenManager.pushScreen(LoreScreen.instance());
             }
         });
 
-        b = new Button(ResourceManager.skin.newDrawable("pixel", Color.GOLD));
-        table.add(b).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
+        b = new TextButton("Stats", bs);
+        table.add(b).colspan(3).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
         table.row();
 
-        b = new Button(ResourceManager.skin.newDrawable("pixel", Color.GOLD));
-        table.add(b).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
+        b = new TextButton("Back", bs);
+        table.add(b).colspan(3).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
         b.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -132,6 +138,13 @@ public class OptionsMenu implements GameScreen {
     @Override
     public void render(float delta) {
         stage.getViewport().apply();
+
+        Batch b = stage.getBatch();
+        b.begin();
+        b.setColor(Color.WHITE);
+        background.draw(b, 0, 0, 1080, 1920);
+        b.end();
+
         stage.act(delta);
         stage.draw();
     }
@@ -151,6 +164,7 @@ public class OptionsMenu implements GameScreen {
 
     @Override
     public void show() {
+        ScreenManager.setBackground(new Color(0xedededff));
     }
 
     @Override
