@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Json;
 import com.mygdx.aoc.Accessory;
 import com.mygdx.aoc.AgeOfCapybaras;
+import com.mygdx.aoc.Capybara;
 import com.mygdx.aoc.Generator;
 import com.mygdx.aoc.Lore;
 import com.mygdx.aoc.User;
@@ -39,6 +40,12 @@ public class ResourceManager {
         batch = new SpriteBatch();
         processFont("goodDog", 3);
         skin.add("badlogic", new Texture(Gdx.files.internal("badlogic.jpg")));
+
+        FileHandle f = Gdx.files.internal("images/capybara.png");
+        Texture t = new Texture(f);
+        skin.add("capybara", t);
+        Pixmap pm = new Pixmap(f);
+        skin.add("capybaraMap", pm);
     }
 
     private static void processFont(String name, int borderWidth) {
@@ -77,14 +84,7 @@ public class ResourceManager {
         Generator.loadGame();
         Lore.loadGame();
         Accessory.loadGame();
-    }
-
-    public static void loadCapybara() {
-        FileHandle f = Gdx.files.internal("images/capybara.png");
-        Texture t = new Texture(f);
-        skin.add("capybara", t);
-        Pixmap pm = new Pixmap(f);
-        skin.add("capybaraMap", pm);
+        Capybara.loadGame();
     }
 
     public static void dispose() {

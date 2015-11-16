@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
 import com.mygdx.aoc.manager.ResourceManager;
+import com.mygdx.aoc.screen.CapybaraScreen;
 
 import java.io.Reader;
 import java.math.BigDecimal;
@@ -24,7 +25,7 @@ public class User {
      */
     static public BigDecimal kapivarium, kps;
     static public String[] powerName;
-    static private float cur20 = 0.f;
+    static private float cur20 = 0.f, curCap = 0.f, nextCap = 15.f;
 
     static {
         capybaras = cps = BigDecimal.ZERO;
@@ -45,6 +46,12 @@ public class User {
         if (cur20 >= 20) {
             cur20 -= 20;
             ResourceManager.saveGame();
+        }
+        curCap += dt;
+        if (curCap >= nextCap) {
+            curCap -= nextCap;
+            CapybaraScreen.instance().addCapybara();
+            nextCap = (float) Math.random() * 4.f + 2.f;
         }
     }
 
@@ -101,6 +108,7 @@ public class User {
      */
     static public void capybaraClick() {
         capybaras = capybaras.add(cpc);
+        CapybaraScreen.instance().addCapybara();
     }
 
     /**

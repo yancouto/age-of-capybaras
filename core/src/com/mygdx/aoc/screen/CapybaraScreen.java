@@ -12,9 +12,13 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.aoc.Capybara;
 import com.mygdx.aoc.manager.GameScreen;
 import com.mygdx.aoc.manager.ResourceManager;
 import com.mygdx.aoc.manager.ScreenManager;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
  * Screen where the Matriarch Capybara is
@@ -26,10 +30,9 @@ public class CapybaraScreen implements GameScreen {
     private Stage stage;
     private Drawable capybara, pixel;
     private Pixmap capybaraMap;
-
+    private Deque<Capybara> caps;
 
     private CapybaraScreen() {
-        ResourceManager.loadCapybara();
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
 
         capybara = ResourceManager.skin.getDrawable("capybara");
@@ -46,6 +49,7 @@ public class CapybaraScreen implements GameScreen {
                 return false;
             }
         });
+        caps = new ArrayDeque<Capybara>();
     }
 
     public static void loadGame() {
@@ -76,6 +80,14 @@ public class CapybaraScreen implements GameScreen {
         back = new Texture(Gdx.files.internal(String.format("eras/era%02d.png", curAge)));
     }
 
+    public void addCapybara() {
+        if (!caps.isEmpty() && System.currentTimeMillis() - caps.peekLast().creation < 1000) return;
+        Capybara c = new Capybara(1080 * .5f, 1920 * .3f);
+        caps.addLast(c);
+        stage.addActor(c);
+        while (caps.size() > 15) caps.pollFirst().remove();
+    }
+
     @Override
     public InputProcessor processor() {
         return stage;
@@ -99,6 +111,13 @@ public class CapybaraScreen implements GameScreen {
         b.begin();
         b.setColor(Color.WHITE);
         b.draw(back, 0, 0, 1080, 1920);
+        b.end();
+
+        stage.act(delta);
+        stage.draw();
+
+        b.begin();
+        b.setColor(Color.WHITE);
         capybara.draw(b, 0, 0, 1080, 1920);
         b.end();
     }
