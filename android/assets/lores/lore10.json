@@ -1,5 +1,5 @@
 {
-  name: "Back to the Future",
-  description: "Age 10 - Back to the Future\n\n  Bla bla bla",
-  age: 10
+  "name": "Back to the Future",
+  "description": "Age 10 - Back to the Future\n\n  Bla bla bla",
+  "age": 10
 }

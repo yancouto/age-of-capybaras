@@ -1,5 +1,5 @@
 {
-  name: "Stone Age",
-  description: "Age 5 - Stone Age\n\n  Bla bla bla",
-  age: 5
+  "name": "Stone Age",
+  "description": "Age 5 - Stone Age\n\n  Bla bla bla",
+  "age": 5
 }

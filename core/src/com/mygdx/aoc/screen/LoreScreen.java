@@ -34,6 +34,7 @@ public class LoreScreen implements GameScreen {
     private TextButton.TextButtonStyle textButtonStyle;
 
     private ScrollPane scrollPaneLores;
+    final ScrollPane scrollPaneDescription = new ScrollPane(description);
 
     private LoreScreen() {
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
@@ -69,7 +70,6 @@ public class LoreScreen implements GameScreen {
 
         Table lores = new Table();
 
-        final ScrollPane scrollPaneDescription = new ScrollPane(description);
         scrollPaneLores = new ScrollPane(lores);
 
         for (Lore l : Lore.lores) {
@@ -145,6 +145,7 @@ public class LoreScreen implements GameScreen {
         currentAgeButton.setChecked(true);
         checkedButton = currentAgeButton;
         description.setText(findLoreDescription(CapybaraScreen.currentAge()));
+        scrollPaneDescription.setScrollY(0);
         System.out.print(scrollPaneLores.getMaxY());
         if (CapybaraScreen.currentAge() > 2)
             scrollPaneLores.setScrollY((CapybaraScreen.currentAge() - 2) * 1920 * .0775f);

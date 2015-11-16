@@ -9,11 +9,15 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.aoc.Generator;
+import com.mygdx.aoc.Upgrade;
 import com.mygdx.aoc.User;
 import com.mygdx.aoc.manager.GameScreen;
 import com.mygdx.aoc.manager.ResourceManager;
@@ -29,7 +33,7 @@ public class MainScreen implements GameScreen {
     private Stage stage;
     private Table table;
     private Button option, accessory;
-    private ScrollPane scrollPane;
+    private ScrollPane scrollPaneGenerators, scrollPaneUpgrades;
     private Table generators, upgrades;
     private BitmapFont numberFont, nameFont;
 
@@ -41,11 +45,9 @@ public class MainScreen implements GameScreen {
 
         table = new Table();
         table.setFillParent(true);
+        table.top();
         table.setDebug(true);
 
-        stage.addActor(table);
-
-        table.top();
         Color[] colors = {Color.FIREBRICK, Color.BLUE};
         Drawable[] ico = new Drawable[colors.length];
         for (int i = 0; i < colors.length; i++)
@@ -78,6 +80,48 @@ public class MainScreen implements GameScreen {
 
         table.add(accessory).maxSize(300).left().top().padLeft(30).padTop(40);
         table.add(option).maxSize(300).expandX().right().top().padRight(30).padTop(40);
+
+        stage.addActor(table);
+
+        TextButton.TextButtonStyle textButtonStyle;
+        textButtonStyle = new TextButton.TextButtonStyle(
+                ResourceManager.skin.newDrawable("pixel", Color.GOLD), // up
+                ResourceManager.skin.newDrawable("pixel", Color.GOLDENROD), // down
+                ResourceManager.skin.newDrawable("pixel", Color.ORANGE), // check
+                ResourceManager.getFont("goodDog", Math.round(1920 * .065f)));
+
+        TextButton gens = new TextButton("Generators", textButtonStyle);
+        TextButton upgs = new TextButton("Upgrades", textButtonStyle);
+        gens.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                scrollPaneGenerators.setVisible(true);
+                scrollPaneUpgrades.setVisible(false);
+            }
+        });
+        upgs.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                scrollPaneUpgrades.setVisible(true);
+                scrollPaneGenerators.setVisible(false);
+            }
+        });
+
+        ButtonGroup tabsGroup = new ButtonGroup(gens, upgs);
+        tabsGroup.setMaxCheckCount(1);
+        tabsGroup.setMinCheckCount(1);
+
+        gens.setChecked(true);
+        upgs.setChecked(false);
+
+        Table tabs = new Table();
+        tabs.setFillParent(true);
+        tabs.bottom().left();
+
+        tabs.add(gens).size(gens.getWidth() + 20, gens.getHeight()).pad(0, 0, 1920 * .3f, 0);
+        tabs.add(upgs).size(upgs.getWidth() + 20, upgs.getHeight()).pad(0, 0, 1920 * .3f, 0);
+
+        stage.addActor(tabs);
 
         stage.addListener(new InputListener() {
             @Override
@@ -119,10 +163,22 @@ public class MainScreen implements GameScreen {
             generators.row();
         }
 
-        scrollPane = new ScrollPane(generators);
-        scrollPane.setPosition(0, 0);
-        scrollPane.setSize(1080, 1920 * .3f);
-        stage.addActor(scrollPane);
+        upgrades = new Table();
+        for (Upgrade u : Upgrade.upgrades) {
+            upgrades.add(u);
+            upgrades.row();
+        }
+
+        scrollPaneGenerators = new ScrollPane(generators);
+        scrollPaneGenerators.setPosition(0, 0);
+        scrollPaneGenerators.setSize(1080, 1920 * .3f);
+        stage.addActor(scrollPaneGenerators);
+
+        scrollPaneUpgrades = new ScrollPane(upgrades);
+        scrollPaneUpgrades.setPosition(0, 0);
+        scrollPaneUpgrades.setSize(1080, 1920 * .3f);
+        stage.addActor(scrollPaneUpgrades);
+        scrollPaneUpgrades.setVisible(false);
     }
 
     @Override

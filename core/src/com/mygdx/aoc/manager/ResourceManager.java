@@ -17,6 +17,7 @@ import com.mygdx.aoc.AgeOfCapybaras;
 import com.mygdx.aoc.Capybara;
 import com.mygdx.aoc.Generator;
 import com.mygdx.aoc.Lore;
+import com.mygdx.aoc.Upgrade;
 import com.mygdx.aoc.User;
 import com.mygdx.aoc.screen.CapybaraScreen;
 
@@ -73,6 +74,7 @@ public class ResourceManager {
         if (prefs == null) return;
         User.saveGame();
         Generator.saveGame();
+        Upgrade.saveGame();
         CapybaraScreen.saveGame();
         Accessory.saveGame();
         prefs.flush();
@@ -82,6 +84,7 @@ public class ResourceManager {
         CapybaraScreen.loadGame();
         User.loadGame();
         Generator.loadGame();
+        Upgrade.loadGame();
         Lore.loadGame();
         Accessory.loadGame();
         Capybara.loadGame();

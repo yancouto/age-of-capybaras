@@ -1,5 +1,5 @@
 {
-  name: "World Domination",
-  description: "Age 3 - World Domination\n\n  Bla bla bla",
-  age: 3
+  "name": "World Domination",
+  "description": "Age 3 - World Domination\n\n  Bla bla bla",
+  "age": 3
 }
