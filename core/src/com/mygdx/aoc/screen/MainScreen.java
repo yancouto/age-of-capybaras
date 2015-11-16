@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.aoc.Generator;
 import com.mygdx.aoc.Upgrade;
@@ -46,13 +45,9 @@ public class MainScreen implements GameScreen {
         table = new Table();
         table.setFillParent(true);
         table.top();
-        table.setDebug(true);
 
-        Color[] colors = {Color.FIREBRICK, Color.BLUE};
-        Drawable[] ico = new Drawable[colors.length];
-        for (int i = 0; i < colors.length; i++)
-            ico[i] = ResourceManager.skin.newDrawable("badlogic", colors[i]);
-        accessory = new Button(ico[0]);
+        accessory = new Button(ResourceManager.skin.getDrawable("accessoryButton"),
+                ResourceManager.skin.newDrawable("accessoryButton", Color.DARK_GRAY));
         accessory.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -61,11 +56,12 @@ public class MainScreen implements GameScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (accessory.hit(x, y, true) == null) return;
                 System.out.println("Going to Accessory");
-                while(ScreenManager.popScreen() != MainScreen.this);
+                while (ScreenManager.popScreen() != MainScreen.this) ;
                 ScreenManager.pushScreen(AccessoryScreen.instance());
             }
         });
-        option = new Button(ico[1]);
+        option = new Button(ResourceManager.skin.getDrawable("configButton"),
+                ResourceManager.skin.newDrawable("configButton", Color.DARK_GRAY));
         option.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -184,6 +180,7 @@ public class MainScreen implements GameScreen {
 
     @Override
     public void show() {
+        ScreenManager.setBackground(Color.WHITE);
     }
 
     @Override

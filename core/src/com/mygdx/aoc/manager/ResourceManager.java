@@ -42,11 +42,11 @@ public class ResourceManager {
         processFont("goodDog", 3);
         skin.add("badlogic", new Texture(Gdx.files.internal("badlogic.jpg")));
 
-        FileHandle f = Gdx.files.internal("images/capybara.png");
-        Texture t = new Texture(f);
-        skin.add("capybara", t);
-        Pixmap pm = new Pixmap(f);
-        skin.add("capybaraMap", pm);
+
+        FileHandle[] imgs = Gdx.files.internal("images").list();
+        for (FileHandle file : imgs)
+            skin.add(file.nameWithoutExtension(), new Texture(file));
+        skin.add("capybaraMap", new Pixmap(Gdx.files.internal("images/capybara.png")));
     }
 
     private static void processFont(String name, int borderWidth) {

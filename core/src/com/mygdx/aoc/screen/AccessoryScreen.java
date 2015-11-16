@@ -47,7 +47,6 @@ public class AccessoryScreen implements GameScreen {
 
         table = new Table();
         table.setFillParent(true);
-        table.setDebug(true);
 
         stage.addActor(table);
 
@@ -65,7 +64,7 @@ public class AccessoryScreen implements GameScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (back.hit(x, y, true) == null) return;
                 System.out.println("Going back");
-                while(ScreenManager.popScreen() != AccessoryScreen.this);
+                while (ScreenManager.popScreen() != AccessoryScreen.this) ;
                 ScreenManager.pushScreen(MainScreen.instance());
             }
         });
@@ -197,12 +196,10 @@ public class AccessoryScreen implements GameScreen {
             if (a.type == 0) {
                 accHelmet.add(a);
                 accHelmet.row();
-            }
-            else if (a.type == 1) {
+            } else if (a.type == 1) {
                 accHead.add(a);
                 accHead.row();
-            }
-            else {
+            } else {
                 accFace.add(a);
                 accFace.row();
             }

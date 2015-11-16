@@ -4,6 +4,7 @@ package com.mygdx.aoc.screen;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.aoc.Lore;
@@ -30,11 +32,10 @@ public class LoreScreen implements GameScreen {
     private Label.LabelStyle labelStyle =
             new Label.LabelStyle(ResourceManager.getFont("goodDog", 70), Color.WHITE);
     final private Label description = new Label(findLoreDescription(CapybaraScreen.currentAge()), labelStyle);
-
-    private TextButton.TextButtonStyle textButtonStyle;
-
-    private ScrollPane scrollPaneLores;
     final ScrollPane scrollPaneDescription = new ScrollPane(description);
+    private TextButton.TextButtonStyle textButtonStyle;
+    private ScrollPane scrollPaneLores;
+    private Drawable background;
 
     private LoreScreen() {
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
@@ -49,6 +50,7 @@ public class LoreScreen implements GameScreen {
             }
         });
         scrollPaneLores();
+        background = ResourceManager.skin.getDrawable("loreBackground");
     }
 
     public static LoreScreen instance() {
@@ -78,8 +80,7 @@ public class LoreScreen implements GameScreen {
                 b = new TextButton(l.getLoreAge() + ". ?????", textButtonStyle);
                 b.setDisabled(true);
                 disabledButtons.add(b);
-            }
-            else {
+            } else {
                 b = new TextButton(l.getLoreAge() + ". " + l.getLoreName(),
                         textButtonStyle);
             }
@@ -111,7 +112,6 @@ public class LoreScreen implements GameScreen {
         table.add(scrollPaneLores).size(1080, 1920 * .3f);
         table.row();
         table.setFillParent(true);
-        table.setDebug(true);
         stage.addActor(table);
     }
 
@@ -152,25 +152,34 @@ public class LoreScreen implements GameScreen {
     }
 
     @Override
-    public void render (float delta) {
+    public void render(float delta) {
+        stage.getViewport().apply();
+
+        Batch b = stage.getBatch();
+        b.begin();
+        b.setColor(Color.WHITE);
+        background.draw(b, 0, 0, 1080, 1920);
+        b.end();
+
         stage.draw();
         stage.act(delta);
     }
 
     @Override
-    public void dispose () { stage.dispose();
+    public void dispose() {
+        stage.dispose();
     }
 
     @Override
-    public void hide () {
+    public void hide() {
     }
 
     @Override
-    public void resume () {
+    public void resume() {
     }
 
     @Override
-    public void pause () {
+    public void pause() {
     }
 
     @Override
@@ -181,6 +190,7 @@ public class LoreScreen implements GameScreen {
     @Override
     public void show() {
         updateEnable();
+        ScreenManager.setBackground(new Color(0xdcc57fff));
     }
 
     @Override
