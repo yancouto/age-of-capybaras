@@ -88,7 +88,6 @@ public class Generator extends Widget {
                     buyLevel(true);
             }
         });
-
     }
 
     /**
