@@ -26,6 +26,7 @@ public class User {
     static public BigDecimal kapivarium, kps;
     static public String[] powerName;
     static private float cur20 = 0.f, curCap = 0.f, nextCap = 15.f;
+    static public BigDecimal clickMultiplier = BigDecimal.ONE;
 
     static {
         capybaras = cps = BigDecimal.ZERO;
@@ -107,7 +108,7 @@ public class User {
      * Simulates the click o the Matriarch Capybara
      */
     static public void capybaraClick() {
-        capybaras = capybaras.add(cpc);
+        capybaras = capybaras.add(cpc.multiply(clickMultiplier));
         CapybaraScreen.instance().addCapybara();
     }
 

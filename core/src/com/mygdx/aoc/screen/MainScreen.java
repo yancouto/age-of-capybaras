@@ -117,9 +117,10 @@ public class MainScreen implements GameScreen {
         Table tabs = new Table();
         tabs.setFillParent(true);
         tabs.bottom().left();
+        tabs.setDebug(true);
 
-        tabs.add(gens).size(gens.getWidth() + 20, gens.getHeight()).pad(0, 0, 1920 * .3f, 0);
-        tabs.add(upgs).size(upgs.getWidth() + 20, upgs.getHeight()).pad(0, 0, 1920 * .3f, 0);
+        tabs.add(gens).size(gens.getWidth() + 100, gens.getHeight()).pad(0, 0, 1920 * .3f, 0);
+        tabs.add(upgs).size(upgs.getWidth() + 100, upgs.getHeight()).pad(0, 1080 - gens.getWidth() - upgs.getWidth() - 200, 1920 * .3f, 0);
 
         stage.addActor(tabs);
 

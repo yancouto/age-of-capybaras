@@ -1,4 +1,9 @@
 {
-  "name": "Test 3",
+  "name": "Next Age",
+  "description": "Advances to next age",
+  "cost": 1000,
+  "type": "age",
+  "generatorName": "none",
+  "multiplier": 0,
   "seed": 1414141
 }

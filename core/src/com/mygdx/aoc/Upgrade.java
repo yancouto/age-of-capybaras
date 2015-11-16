@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.mygdx.aoc.manager.ResourceManager;
+import com.mygdx.aoc.screen.CapybaraScreen;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -20,28 +21,25 @@ import java.util.Random;
 public class Upgrade extends Widget {
     public static Upgrade[] upgrades;
     private static Drawable pixel;
-    private String name;
-    private Color backColor, fillColor;
+    private String name, description, generatorName, type;
+    private Color colorActive, colorInactive;
     private BitmapFont fontSmall, fontTiny;
     private Rectangle buyButton = new Rectangle();
     private Random random;
-    private int currentLevel;
-    //private BigInteger initialCost, currentCost;
-    //private BigDecimal multiplier = new BigDecimal("1.1");
+    private BigDecimal cost, multiplier;
+    private boolean bought = false;
 
     public Upgrade (FileHandle file) {
         ResourceManager.json.fromJson(UpgradeData.class, file).copyTo(this);
         float a = random.nextFloat(), b = random.nextFloat(), c = random.nextFloat();
         float mult1 = 1.25f / (a + b + c), mult2 = 2.f / (a + b + c);
-        backColor = new Color(a * mult1, b * mult1, c * mult1, 1);
-        fillColor = new Color(a * mult2, b * mult2, c * mult2, 1);
+        colorInactive = new Color(a * mult1, b * mult1, c * mult1, 1);
+        colorActive = new Color(a * mult2, b * mult2, c * mult2, 1);
         fontTiny = ResourceManager.getFont("goodDog", 50);
         fontSmall = ResourceManager.getFont("goodDog", 80);
 
-        Preferences prefs = ResourceManager.prefs;
-        int cur = prefs.getInteger(name + "Upgrade", 0);
-        while (currentLevel < cur)
-            buyLevel(false);
+        //Preferences prefs = ResourceManager.prefs;
+        //if (prefs.getBoolean(name + "Upgrade", false)) buy();
 
         addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -49,8 +47,8 @@ public class Upgrade extends Widget {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (buyButton.contains(x, y))
-                    buyLevel(true);
+                if (buyButton.contains(x, y) && (!bought || type.equals("age")))
+                    buy();
             }
         });
     }
@@ -69,7 +67,7 @@ public class Upgrade extends Widget {
     }
 
     private void save() {
-        ResourceManager.prefs.putInteger(name + "Upgrade", currentLevel);
+        ResourceManager.prefs.putBoolean(name + "Upgrade", bought);
     }
 
     @Override
@@ -82,69 +80,72 @@ public class Upgrade extends Widget {
         return 1920 * .125f;
     }
 
-    /**
-     * Advances to the next level
-     */
-    public boolean buyLevel(boolean pay) {
-//        if (pay) {
-//            BigDecimal price;
-//            if (currentLevel == 0) price = initialCost;
-//            else price = currentCost;
-//            if (User.capybaras.compareTo(price) < 0) return false;
-//            User.capybaras = User.capybaras.subtract(price);
-//        }
-        currentLevel++;
-        // no need to update
-//        if (currentLevel == 1) {
-//            User.addCPS(currentCPS);
-//            return true;
-//        }
-//        BigDecimal newCPS = currentCPS.multiply(growth);
-//        if (currentLevel % 100 == 0) newCPS = newCPS.add(newCPS);
-//        User.addCPS(newCPS.subtract(currentCPS));
-//        currentCPS = newCPS;
-//        currentCost = currentCost.multiply(growth).multiply(multiplier);
+    public boolean buy() {
+        if (User.capybaras.compareTo(cost) < 0) return false;
+
+        if (type.equals("click")) {
+            User.clickMultiplier = multiplier;
+            User.capybaras = User.capybaras.subtract(cost);
+            bought = true;
+        }
+        else if (type.equals("generator")) {
+            for (Generator g : Generator.generators) {
+                if (g.getName().equals(generatorName) && g.getCurrentLevel() > 0) {
+                    g.setGrowth(multiplier);
+                    User.capybaras = User.capybaras.subtract(cost);
+                    bought = true;
+                }
+                return false;
+            }
+        }
+        else if (type.equals("age")) {
+            CapybaraScreen.advanceAge();
+            BigDecimal curAge = new BigDecimal(CapybaraScreen.currentAge());
+            User.capybaras = User.capybaras.subtract(cost);
+            cost = cost.multiply(curAge);
+        }
         return true;
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.setColor(backColor);
+        batch.setColor(bought ? colorInactive : colorActive);
         pixel.draw(batch, getX(), getY(), getWidth(), getHeight());
-        batch.setColor(fillColor);
         float h4 = getHeight() / 4.f;
-        //BigInteger cost;
         float s2 = fontSmall.getLineHeight() / 2.f, t2 = fontTiny.getLineHeight() / 2.f;
-        if (currentLevel == 0) {
-            fontSmall.draw(batch, name, getX() + 50, getY() + s2 + h4 * 2.f);
-            //cost = initialCost.toBigInteger();
-        } else {
-            pixel.draw(batch, getX(), getY(), getWidth() * (currentLevel % 100) / 100.f, getHeight());
-            fontSmall.draw(batch, "Lvl: " + currentLevel, getX() + 50, getY() + h4 * 2.f + s2);
-            //BigInteger cps = currentCPS.toBigInteger();
-            //fontSmall.draw(batch, User.toSmallString(cps, 1), getX() + 50, getY() + h4 + s2 - getHeight() / 20.f);
-            //fontTiny.draw(batch, User.toBla(cps) + " CPS", getX() + 200, getY() + h4 + t2 - getHeight() / 20.f);
-            fontSmall.draw(batch, name, getX() + 50, getY() + h4 * 3.f + s2 + getHeight() / 20.f);
-            //cost = currentCost.toBigInteger();
+        fontSmall.draw(batch, name, getX() + 25, getY() + h4 * 2.f + s2 + getHeight() / 20.f);
+
+        if (multiplier.compareTo(BigDecimal.ZERO) == 0)
+            fontTiny.draw(batch, description, getX() + 25, getY() + 2f * s2);
+        else
+            fontTiny.draw(batch, description + " x" + multiplier, getX() + 25, getY() + 2f * s2);
+
+        if (!bought || type.equals("age")) {
+            BigInteger ncost = cost.toBigInteger();
+            batch.setColor(Color.LIME);
+            buyButton.set(getWidth() * .55f, h4 * .75f, 400, h4 * 2.5f);
+            pixel.draw(batch, getX() + buyButton.x, getY() + buyButton.y, buyButton.width, buyButton.height);
+            batch.setColor(Color.WHITE);
+            fontSmall.draw(batch, User.toSmallString(ncost, 3), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .7f + s2);
+            fontTiny.draw(batch, User.toBla(ncost), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .25f + t2);
         }
-        batch.setColor(Color.LIME);
-        buyButton.set(getWidth() * .55f, h4 * .75f, 400, h4 * 2.5f);
-        pixel.draw(batch, getX() + buyButton.x, getY() + buyButton.y, buyButton.width, buyButton.height);
-        batch.setColor(Color.WHITE);
-        //fontSmall.draw(batch, User.toSmallString(cost, 3), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .7f + s2);
-        //fontTiny.draw(batch, User.toBla(cost), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .25f + t2);
     }
 
     private static class UpgradeData {
-        String name;
+        String name, cost, description, type, generatorName, multiplier;
         long seed;
 
         public UpgradeData() {
         }
 
         public void copyTo(Upgrade u) {
+            u.name = name;
+            u.description = description;
+            u.cost = new BigDecimal(cost);
+            u.type = type;
+            u.generatorName = generatorName;
+            u.multiplier = new BigDecimal(multiplier);
             u.random = new Random(seed);
-            u.name = new String(name);
         }
     }
 }

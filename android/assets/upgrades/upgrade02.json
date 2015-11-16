@@ -1,4 +1,9 @@
 {
-  "name": "Test 2",
+  "name": "Capivarized Birth",
+  "description": "Natural Birth rate",
+  "cost": 100,
+  "type": "generator",
+  "generatorName": "Natural Birth",
+  "multiplier": 4,
   "seed": 1313131
 }

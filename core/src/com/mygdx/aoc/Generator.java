@@ -91,6 +91,22 @@ public class Generator extends Widget {
 
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    public void setGrowth(BigDecimal gr) {
+        growth = gr;
+        BigDecimal newCPS = currentCPS.multiply(growth);
+        if (currentLevel % 100 == 0) newCPS = newCPS.add(newCPS);
+        User.addCPS(newCPS.subtract(currentCPS));
+        currentCPS = newCPS;
+    }
+
     /**
      * Loads generators instances and initializes them
      *

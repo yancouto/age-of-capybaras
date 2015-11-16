@@ -1,4 +1,9 @@
 {
-  "name": "Test 1",
+  "name": "Double stomp",
+  "description": "Increases click",
+  "cost": 100,
+  "type": "click",
+  "generatorName": "none",
+  "multiplier": 2,
   "seed": 1212121
 }
