@@ -86,8 +86,8 @@ public class ResourceManager {
         Generator.loadGame();
         Upgrade.loadGame();
         Lore.loadGame();
-        Accessory.loadGame();
         Capybara.loadGame();
+        Accessory.loadGame();
     }
 
     public static void dispose() {

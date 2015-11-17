@@ -63,8 +63,7 @@ public class AccessoryScreen implements GameScreen {
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (option.hit(x, y, true) == null) return;
-                while(ScreenManager.popScreen() != AccessoryScreen.this);
-                ScreenManager.pushScreen(OptionsMenu.instance());
+//                TODO: Call ads
             }
         });
         back = new Button(ico[1]);

@@ -50,16 +50,13 @@ public class Accessory extends Widget {
         else if (!equiped) buttonState = "Equip";
         else {
             Capybara.equipAccessory(this);
-            if (equiped)
-                buttonState = "Unequip";
-            else
-                buttonState = "Equip";
         }
         FileHandle f = Gdx.files.internal("accessory-images/" + imageName);
         Texture t = new Texture(f);
         ResourceManager.skin.add(imageName, t);
         Pixmap pm = new Pixmap(f);
         ResourceManager.skin.add(imageName +"Map", pm);
+        image = ResourceManager.skin.getDrawable(imageName);
 
 //        TODO: Find good colors
         backColor = new Color(Color.ORANGE);
@@ -145,7 +142,6 @@ public class Accessory extends Widget {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        image = ResourceManager.skin.getDrawable(imageName);
         batch.setColor(backColor);
         pixel.draw(batch, getX(), getY(), getWidth(), getHeight());
         batch.setColor(fillColor);

@@ -62,6 +62,7 @@ public class Capybara extends Actor {
     }
 
     static public void loadGame() {
+        helmet = head = face = null;
     }
 
     @Override
