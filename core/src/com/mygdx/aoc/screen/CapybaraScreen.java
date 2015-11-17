@@ -120,17 +120,14 @@ public class CapybaraScreen implements GameScreen {
         b.setColor(Color.WHITE);
         capybara.draw(b, 0, 0, 1080, 1920);
         if (Capybara.helmet != null) {
-//            System.out.println("Oi1");
             b.setColor(Color.WHITE);
             Capybara.helmet.image.draw(b, 0, 0, 1080, 1920);
         }
         if (Capybara.head != null) {
-//            System.out.println("Oi2");
             b.setColor(Color.WHITE);
             Capybara.head.image.draw(b, 0, 0, 1080, 1920);
         }
         if (Capybara.face != null) {
-//            System.out.println("Oi3");
             b.setColor(Color.WHITE);
             Capybara.face.image.draw(b, 0, 0, 1080, 1920);
         }

@@ -82,7 +82,6 @@ public class Accessory extends Widget {
                         purchased = true;
                     }
                     else if (purchased && equiped) {
-                        System.out.println("BEFORE");
                         Capybara.unequipAccessory(self);
                     }
                     else if (purchased && !equiped) {
@@ -103,7 +102,6 @@ public class Accessory extends Widget {
         FileHandle[] accs = Gdx.files.internal("accessory").list();
         accessories = new Accessory[accs.length];
         for (int i = 0; i < accs.length; i++) {
-//            System.out.println(accs[i]);
             accessories[i] = new Accessory(accs[i]);
         }
     }

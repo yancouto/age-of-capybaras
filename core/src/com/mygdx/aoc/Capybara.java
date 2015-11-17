@@ -29,7 +29,6 @@ public class Capybara extends Actor {
     }
 
     static void equipAccessory (Accessory acc) {
-//        System.out.println(acc.name);
         acc.buttonState = "Unequip";
         acc.equiped = true;
         if (acc.type == 0) {
@@ -51,8 +50,6 @@ public class Capybara extends Actor {
     }
 
     static void unequipAccessory(Accessory acc) {
-        System.out.println("UN " + acc);
-        System.out.println("UN " + helmet);
         if (acc == null) return;
         acc.buttonState = "Equip";
         acc.equiped = false;
