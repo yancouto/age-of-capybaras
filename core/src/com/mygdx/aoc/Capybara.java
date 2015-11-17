@@ -10,6 +10,7 @@ import com.mygdx.aoc.manager.ResourceManager;
 
 public class Capybara extends Actor {
     public final long creation;
+    public static Accessory helmet = null, head = null, face = null;
     private Vector2 v;
     private float rot;
     private TextureRegion capybara;
@@ -27,7 +28,41 @@ public class Capybara extends Actor {
         rot = (float) Math.random() * 80 - 40;
     }
 
+    static void equipAccessory (Accessory acc) {
+        acc.buttonState = "Unequip";
+        acc.equiped = true;
+        if (acc.type == 0) {
+            unequipAccessory(head);
+            unequipAccessory(face);
+            unequipAccessory(helmet);
+            helmet = acc;
+        }
+        else if (acc.type == 1) {
+            unequipAccessory(helmet);
+            unequipAccessory(head);
+            head = acc;
+        }
+        else if (acc.type == 2) {
+            unequipAccessory(helmet);
+            unequipAccessory(face);
+            face = acc;
+        }
+    }
+
+    static void unequipAccessory(Accessory acc) {
+        if (acc == null) return;
+        acc.buttonState = "Equip";
+        acc.equiped = false;
+        if (acc.equals(helmet))
+            helmet = null;
+        else if (acc.equals(head))
+            head = null;
+        else if (acc.equals(face))
+            face = null;
+    }
+
     static public void loadGame() {
+        helmet = head = face = null;
     }
 
     @Override

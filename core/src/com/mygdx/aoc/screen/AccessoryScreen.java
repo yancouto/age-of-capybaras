@@ -30,7 +30,7 @@ public class AccessoryScreen implements GameScreen {
     private static AccessoryScreen accessoryScreen;
     private Stage stage;
     private Table table, tabs;
-    private Button option, back;
+    private Button back, option;
     private Button helmet, head, face;
     private ButtonGroup tabsGroup;
     private ScrollPane scrollPaneHelmet, scrollPaneHead, scrollPaneFace;
@@ -39,7 +39,6 @@ public class AccessoryScreen implements GameScreen {
 
     private AccessoryScreen() {
 
-//        Same as main screen from here...
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
 
         numberFont = ResourceManager.getFont("goodDog", 185);
@@ -55,7 +54,18 @@ public class AccessoryScreen implements GameScreen {
         final Drawable[] ico = new Drawable[colors.length];
         for (int i = 0; i < colors.length; i++)
             ico[i] = ResourceManager.skin.newDrawable("badlogic", colors[i]);
-        back = new Button(ico[0]);
+        option = new Button(ico[0]);
+        option.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (option.hit(x, y, true) == null) return;
+//                TODO: Call ads
+            }
+        });
+        back = new Button(ico[1]);
         back.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -64,25 +74,13 @@ public class AccessoryScreen implements GameScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (back.hit(x, y, true) == null) return;
                 System.out.println("Going back");
-                while (ScreenManager.popScreen() != AccessoryScreen.this) ;
+                while (ScreenManager.popScreen() != AccessoryScreen.instance()) ;
                 ScreenManager.pushScreen(MainScreen.instance());
             }
         });
-        option = new Button(ico[1]);
-        option.addListener(new InputListener() {
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
 
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (option.hit(x, y, true) == null) return;
-                while (ScreenManager.popScreen() != CapybaraScreen.instance()) ;
-                ScreenManager.pushScreen(OptionsMenu.instance());
-            }
-        });
-
-        table.add(back).maxSize(300).left().top().padLeft(30).padTop(40);
-        table.add(option).maxSize(300).expandX().right().top().padRight(30).padTop(40);
+        table.add(option).maxSize(300).left().top().padLeft(30).padTop(40);
+        table.add(back).maxSize(300).expandX().right().top().padRight(30).padTop(40);
 
         stage.addListener(new InputListener() {
             @Override
@@ -105,7 +103,6 @@ public class AccessoryScreen implements GameScreen {
                 return false;
             }
         });
-//        ...to here.
 
         TextButton.TextButtonStyle textButtonStyle;
         textButtonStyle = new TextButton.TextButtonStyle(
