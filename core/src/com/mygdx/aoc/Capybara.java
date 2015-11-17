@@ -31,6 +31,7 @@ public class Capybara extends Actor {
     static void equipAccessory (Accessory acc) {
 //        System.out.println(acc.name);
         acc.buttonState = "Unequip";
+        acc.equiped = true;
         if (acc.type == 0) {
             unequipAccessory(head);
             unequipAccessory(face);
@@ -50,25 +51,17 @@ public class Capybara extends Actor {
     }
 
     static void unequipAccessory(Accessory acc) {
-        System.out.println("UN " + acc.name);
-        System.out.println("UN " + helmet.name);
+        System.out.println("UN " + acc);
+        System.out.println("UN " + helmet);
         if (acc == null) return;
-        if (acc.equals(helmet)) {
-            System.out.println(acc.name);
-            helmet.buttonState = "Equiped";
-            helmet.equiped = false;
+        acc.buttonState = "Equip";
+        acc.equiped = false;
+        if (acc.equals(helmet))
             helmet = null;
-        }
-        else if (acc.equals(head)) {
-            head.buttonState = "Equiped";
-            head.equiped = false;
+        else if (acc.equals(head))
             head = null;
-        }
-        else if (acc.equals(face)) {
-            face.buttonState = "Equiped";
-            face.equiped = false;
+        else if (acc.equals(face))
             face = null;
-        }
     }
 
     static public void loadGame() {

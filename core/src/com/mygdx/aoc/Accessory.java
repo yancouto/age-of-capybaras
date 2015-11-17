@@ -80,10 +80,12 @@ public class Accessory extends Widget {
                     if (!purchased && buyAccessory()) {
                         buttonState = "Equip";
                         purchased = true;
-                    } else if (purchased && equiped) {
-                        buttonState = "Equip";
+                    }
+                    else if (purchased && equiped) {
+                        System.out.println("BEFORE");
                         Capybara.unequipAccessory(self);
-                    } else if (purchased && !equiped) {
+                    }
+                    else if (purchased && !equiped) {
                         Capybara.equipAccessory(self);
                     }
             }
