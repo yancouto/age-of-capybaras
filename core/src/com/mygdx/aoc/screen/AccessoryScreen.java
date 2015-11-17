@@ -30,7 +30,7 @@ public class AccessoryScreen implements GameScreen {
     private static AccessoryScreen accessoryScreen;
     private Stage stage;
     private Table table, tabs;
-    private Button back, option;
+    private Button back, ads;
     private Button helmet, head, face;
     private ButtonGroup tabsGroup;
     private ScrollPane scrollPaneHelmet, scrollPaneHead, scrollPaneFace;
@@ -50,22 +50,22 @@ public class AccessoryScreen implements GameScreen {
         stage.addActor(table);
 
         table.top();
-        Color[] colors = {Color.FIREBRICK, Color.BLUE};
-        final Drawable[] ico = new Drawable[colors.length];
-        for (int i = 0; i < colors.length; i++)
-            ico[i] = ResourceManager.skin.newDrawable("badlogic", colors[i]);
-        option = new Button(ico[0]);
-        option.addListener(new InputListener() {
+
+
+        ads = new Button(ResourceManager.skin.getDrawable("adsButton"),
+                ResourceManager.skin.newDrawable("adsButton", Color.DARK_GRAY));
+        ads.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (option.hit(x, y, true) == null) return;
+                if (ads.hit(x, y, true) == null) return;
 //                TODO: Call ads
             }
         });
-        back = new Button(ico[1]);
+        back = new Button(ResourceManager.skin.getDrawable("backButton1"),
+                ResourceManager.skin.newDrawable("backButton1", Color.DARK_GRAY));
         back.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -79,7 +79,7 @@ public class AccessoryScreen implements GameScreen {
             }
         });
 
-        table.add(option).maxSize(300).left().top().padLeft(30).padTop(40);
+        table.add(ads).maxSize(300).left().top().padLeft(30).padTop(40);
         table.add(back).maxSize(300).expandX().right().top().padRight(30).padTop(40);
 
         stage.addListener(new InputListener() {
