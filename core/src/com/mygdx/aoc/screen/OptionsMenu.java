@@ -60,9 +60,13 @@ public class OptionsMenu implements GameScreen {
         sl = new Slider(0, 100, 1, false, ss);
         sl.setValue(ResourceManager.prefs.getInteger("musicVolume", 50));
         sl.addListener(new ChangeListener() {
+
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                ResourceManager.prefs.putInteger("musicVolume", (int) ((Slider) actor).getValue());
+                int val = (int) ((Slider) actor).getValue();
+                ResourceManager.prefs.putInteger("musicVolume", val);
+                CapybaraScreen.backMusic.setVolume(val / 100.f);
+                ResourceManager.prefs.flush();
             }
         });
         table.add(new Image(ResourceManager.skin.getDrawable("musicEmpty"))).padRight(50);
@@ -90,8 +94,20 @@ public class OptionsMenu implements GameScreen {
             }
         });
 
-        b = new TextButton("Stats", bs);
+        b = new TextButton("Credits", bs);
         table.add(b).colspan(3).size(1080 * .6f, 1920 * .1f).pad(1920 * .025f, 0, 1920 * .025f, 0);
+        b.addListener(new InputListener() {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (event.getTarget().hit(x, y, true) == null) return;
+                System.out.println("Going to Credits");
+                while (ScreenManager.popScreen() != OptionsMenu.this) ;
+                ScreenManager.pushScreen(CreditsScreen.instance());
+            }
+        });
         table.row();
 
         b = new TextButton("Back", bs);

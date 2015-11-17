@@ -99,11 +99,11 @@ public class Upgrade extends Widget {
         if (gen != null && gen.getCurrentLevel() > 0) {
             if (pay) {
                 if (User.capybaras.compareTo(cost) < 0) return false;
-                User.capybaras = User.capybaras.subtract(cost);
+                User.removeCapybara(cost);
                 bought = true;
                 MainScreen.instance().upgrades.removeActor(this);
             }
-            gen.setGrowth(multiplier);
+            gen.multiplyCPS(multiplier);
             return true;
         }
         return false;
@@ -112,18 +112,18 @@ public class Upgrade extends Widget {
     public boolean buyClick(boolean pay) {
         if (pay) {
             if (User.capybaras.compareTo(cost) < 0) return false;
-            User.capybaras = User.capybaras.subtract(cost);
+            User.removeCapybara(cost);
             bought = true;
             MainScreen.instance().upgrades.removeActor(this);
         }
-        User.clickMultiplier = multiplier;
+        User.multiplyCPC(multiplier);
         return true;
     }
 
     public boolean buyNextAge(boolean pay) {
         if (pay) {
             if (User.capybaras.compareTo(cost) < 0) return false;
-            User.capybaras = User.capybaras.subtract(cost);
+            User.removeCapybara(cost);
             CapybaraScreen.advanceAge();
         }
         cost = agesCost[CapybaraScreen.currentAge() - 1];
@@ -151,7 +151,7 @@ public class Upgrade extends Widget {
         else
             fontTiny.draw(batch, description + " x" + multiplier, getX() + 25, getY() + 2f * s2);
 
-        BigInteger ncost = cost.toBigInteger();
+        BigInteger nCost = cost.toBigInteger();
         if (User.capybaras.compareTo(cost) < 0 || (gen != null && gen.getCurrentLevel() == 0))
             batch.setColor(Color.GRAY);
         else
@@ -159,16 +159,13 @@ public class Upgrade extends Widget {
         buyButton.set(getWidth() * .55f, h4 * .75f, 400, h4 * 2.5f);
         pixel.draw(batch, getX() + buyButton.x, getY() + buyButton.y, buyButton.width, buyButton.height);
         batch.setColor(Color.WHITE);
-        fontSmall.draw(batch, User.toSmallString(ncost, 3), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .7f + s2);
-        fontTiny.draw(batch, User.toBla(ncost), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .25f + t2);
+        fontSmall.draw(batch, User.toSmallString(nCost, 3), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .7f + s2);
+        fontTiny.draw(batch, User.toBla(nCost), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .25f + t2);
     }
 
     private static class UpgradeData {
         String name, description, cost, type, generatorName, multiplier;
         long seed;
-
-        public UpgradeData() {
-        }
 
         public void copyTo(Upgrade u) {
             u.name = name;

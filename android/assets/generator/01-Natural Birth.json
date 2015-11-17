@@ -1,7 +1,7 @@
 {
-  "initialCost": 0,
-  "firstCost": 15,
+  "initialCost": 50,
   "firstWin": 5,
-  "growth": 1.1,
+  "cpsGrowth": 1.1,
+  "costGrowth": 1.15,
   "seed": 1212121
 }

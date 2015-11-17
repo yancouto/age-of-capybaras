@@ -1,7 +1,7 @@
 {
   "initialCost": 12000000000,
-  "firstCost": 66000000000,
   "firstWin": 51567,
-  "growth": 2,
+  "cpsGrowth": 2,
+  "costGrowth": 2.6,
   "seed": 2015
 }

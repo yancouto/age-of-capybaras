@@ -29,12 +29,12 @@ import java.math.BigInteger;
  */
 public class MainScreen implements GameScreen {
     private static MainScreen mainScreen;
+    public Table upgrades;
     private Stage stage;
     private Table table;
     private Button option, accessory;
     private ScrollPane scrollPaneGenerators, scrollPaneUpgrades;
     private Table generators;
-    public Table upgrades;
     private BitmapFont numberFont, nameFont;
 
     private MainScreen() {
@@ -114,7 +114,6 @@ public class MainScreen implements GameScreen {
         Table tabs = new Table();
         tabs.setFillParent(true);
         tabs.bottom().left();
-        tabs.setDebug(true);
 
         tabs.add(gens).size(gens.getWidth() + 100, gens.getHeight()).pad(0, 0, 1920 * .3f, 0);
         tabs.add(upgs).size(upgs.getWidth() + 100, upgs.getHeight()).pad(0, 1080 - gens.getWidth() - upgs.getWidth() - 200, 1920 * .3f, 0);

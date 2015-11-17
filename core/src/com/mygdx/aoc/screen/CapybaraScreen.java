@@ -3,13 +3,19 @@ package com.mygdx.aoc.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.aoc.Capybara;
@@ -24,16 +30,21 @@ import java.util.Deque;
  * Screen where the Matriarch Capybara is
  */
 public class CapybaraScreen implements GameScreen {
+    static final String[] musicNames = {"Lurid Delusion.mp3", "Heroic Minority.mp3", "Melancholy RPG.mp3"};
+    public static Music backMusic;
     private static CapybaraScreen capybaraScreen;
     private static int curAge;
     private static Texture back;
-    private Stage stage;
+    private Stage stage, stage2;
     private Drawable capybara, pixel;
     private Pixmap capybaraMap;
     private Deque<Capybara> caps;
+    private Label.LabelStyle labelStyle;
 
     private CapybaraScreen() {
+        labelStyle = new Label.LabelStyle(ResourceManager.getFont("goodDog", 100), Color.WHITE);
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
+        stage2 = new Stage(stage.getViewport(), stage.getBatch());
 
         capybara = ResourceManager.skin.getDrawable("capybara");
         capybaraMap = ResourceManager.skin.get("capybaraMap", Pixmap.class);
@@ -71,6 +82,8 @@ public class CapybaraScreen implements GameScreen {
     }
 
     public static void advanceAge() {
+        // TODO: create more ages
+        if (curAge == 3) return;
         curAge++;
         updateAge();
     }
@@ -78,14 +91,41 @@ public class CapybaraScreen implements GameScreen {
     private static void updateAge() {
         if (back != null) back.dispose();
         back = new Texture(Gdx.files.internal(String.format("eras/era%02d.png", curAge)));
+        if (backMusic != null) {
+            backMusic.stop();
+            backMusic.dispose();
+        }
+        backMusic = Gdx.audio.newMusic(Gdx.files.internal("music/" + musicNames[currentAge() - 1]));
+        backMusic.play();
+        backMusic.setLooping(true);
+        backMusic.setVolume(ResourceManager.prefs.getInteger("musicVolume", 100) / 100.f);
     }
 
+    /**
+     * Displays a floating Capybara onscreen
+     */
     public void addCapybara() {
         if (!caps.isEmpty() && System.currentTimeMillis() - caps.peekLast().creation < 1000) return;
         Capybara c = new Capybara(1080 * .5f, 1920 * .3f);
         caps.addLast(c);
         stage.addActor(c);
         while (caps.size() > 15) caps.pollFirst().remove();
+    }
+
+    /**
+     * Displays floating text onscreen
+     *
+     * @param text text to be displayed
+     */
+    public void addWin(String text) {
+        Actor a = new Label(text, labelStyle);
+        Vector2 v = new Vector2(1, 0);
+        v.rotate(360 * (float) Math.random());
+        v.scl((float) Math.random() * 750 + 750);
+        Action moveAndFade = Actions.parallel(Actions.fadeOut(3), Actions.moveBy(v.x, v.y, 3));
+        a.setPosition(1080 * (.4f + (float) Math.random() * .2f), 1920 * (.4f + (float) Math.random() * .2f));
+        a.addAction(Actions.sequence(moveAndFade, Actions.removeActor()));
+        stage2.addActor(a);
     }
 
     @Override
@@ -120,6 +160,9 @@ public class CapybaraScreen implements GameScreen {
         b.setColor(Color.WHITE);
         capybara.draw(b, 0, 0, 1080, 1920);
         b.end();
+
+        stage2.act(delta);
+        stage2.draw();
     }
 
     @Override

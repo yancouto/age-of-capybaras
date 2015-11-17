@@ -31,16 +31,16 @@ import java.util.Random;
  * For now generators scale like this:
  * Each generator has 5 main parameters: initialCost, firstCost, firstWin, seed, growth
  * initialCost : BigInteger = initial cost to buy the generator
- * firstCost : BigInteger   = cost of the first upgrade, should be close to initialCost
- * firstWin : BigDecimal    = first CPS
+ * firstCPS : BigDecimal    = first CPS
  * seed : long              = seed used by Random generator to create color and other things
- * growth : BigDecimal      = increase after update
+ * costGrowth : BigDecimal  = increase in cost after update
+ * cpsGrowth : BigDecimal   = increase in CPS after update
  * <p/>
  * Suppose current update is priced curPrice and this generator currently supplies curCPS
  * then after buying the upgrade the new CPS will be
- * curCPS * growth
+ * curCPS * cpsGrowth
  * and the next price will be
- * curPrice * growth * 1.1
+ * curPrice * costGrowth
  * <p/>
  * After every 100th update, this Generator CPS will be multiplied by 2
  */
@@ -53,13 +53,12 @@ public class Generator extends Widget {
     private static Sound fail;
     public final String name;
     private BitmapFont fontSmall, fontBig, fontTiny;
-    private BigDecimal initialCost, currentCost, currentCPS, growth;
+    private BigDecimal currentCost, currentCPS, cpsGrowth, costGrowth;
     private Random random;
     private int currentLevel;
     private Color backColor, fillColor;
     private Rectangle buyButton = new Rectangle();
     private boolean buttonHeld = false;
-    private BigDecimal multiplier = new BigDecimal("1.1");
 
     public Generator(FileHandle file) {
         name = file.nameWithoutExtension().substring(3);
@@ -91,28 +90,11 @@ public class Generator extends Widget {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 buttonHeld = false;
                 if (!buyButton.contains(x, y)) return;
-                BigDecimal cost = currentLevel == 0 ? initialCost : currentCost;
-                if (User.capybaras.compareTo(cost) >= 0)
+                if (User.capybaras.compareTo(currentCost) >= 0)
                     buyLevel(true);
                 else fail.play(ResourceManager.prefs.getInteger("soundVolume") / 100.f);
             }
         });
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
-
-    public void setGrowth(BigDecimal gr) {
-        growth = gr;
-        BigDecimal newCPS = currentCPS.multiply(growth);
-        if (currentLevel % 100 == 0) newCPS = newCPS.add(newCPS);
-        User.addCPS(newCPS.subtract(currentCPS));
-        currentCPS = newCPS;
     }
 
     /**
@@ -122,8 +104,7 @@ public class Generator extends Widget {
      */
     public static void loadGame() {
         pixel = ResourceManager.skin.getDrawable("pixel");
-        // TODO: Remove this commented
-        //fail = ResourceManager.skin.get("negative", Sound.class);
+        fail = ResourceManager.skin.get("negative", Sound.class);
         FileHandle[] gens = Gdx.files.internal("generator").list();
         generators = new Generator[gens.length];
         for (int i = 0; i < gens.length; i++)
@@ -138,6 +119,24 @@ public class Generator extends Widget {
     public static void saveGame() {
         for (Generator g : generators)
             g.save();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    /**
+     * Multiplies current CPS by {@code num}. Assumes {@code currentLevel > 0}.
+     * @param num amount to multiply CPS
+     */
+    public void multiplyCPS(BigDecimal num) {
+        BigDecimal newCPS = currentCPS.multiply(num);
+        User.addCPS(newCPS.subtract(currentCPS));
+        currentCPS = newCPS;
     }
 
     @Override
@@ -155,23 +154,17 @@ public class Generator extends Widget {
      */
     public boolean buyLevel(boolean pay) {
         if (pay) {
-            BigDecimal price;
-            if (currentLevel == 0) price = initialCost;
-            else price = currentCost;
-            if (User.capybaras.compareTo(price) < 0) return false;
-            User.capybaras = User.capybaras.subtract(price);
+            if (User.capybaras.compareTo(currentCost) < 0) return false;
+            User.removeCapybara(currentCost);
         }
         currentLevel++;
-        // no need to update
-        if (currentLevel == 1) {
-            User.addCPS(currentCPS);
-            return true;
-        }
-        BigDecimal newCPS = currentCPS.multiply(growth);
+        BigDecimal newCPS = currentCPS;
+        if (currentLevel != 1) newCPS = newCPS.multiply(cpsGrowth);
+        else currentCPS = BigDecimal.ZERO;
         if (currentLevel % 100 == 0) newCPS = newCPS.add(newCPS);
         User.addCPS(newCPS.subtract(currentCPS));
         currentCPS = newCPS;
-        currentCost = currentCost.multiply(growth).multiply(multiplier);
+        currentCost = currentCost.multiply(costGrowth);
         return true;
     }
 
@@ -190,11 +183,9 @@ public class Generator extends Widget {
         pixel.draw(batch, getX(), getY(), getWidth(), getHeight());
         batch.setColor(fillColor);
         float h4 = getHeight() / 4.f;
-        BigDecimal cost;
         float s2 = fontSmall.getLineHeight() / 2.f, t2 = fontTiny.getLineHeight() / 2.f;
         if (currentLevel == 0) {
             fontSmall.draw(batch, name, getX() + 50, getY() + s2 + h4 * 2.f);
-            cost = initialCost;
         } else {
             pixel.draw(batch, getX(), getY(), getWidth() * (currentLevel % 100) / 100.f, getHeight());
             fontSmall.draw(batch, "Lvl: " + currentLevel, getX() + 50, getY() + h4 * 2.f + s2);
@@ -202,35 +193,31 @@ public class Generator extends Widget {
             fontSmall.draw(batch, User.toSmallString(cps, 1), getX() + 50, getY() + h4 + s2 - getHeight() / 20.f);
             fontTiny.draw(batch, User.toBla(cps) + " CPS", getX() + 200, getY() + h4 + t2 - getHeight() / 20.f);
             fontSmall.draw(batch, name, getX() + 50, getY() + h4 * 3.f + s2 + getHeight() / 20.f);
-            cost = currentCost;
         }
         buyButton.set(getWidth() * .55f, h4 * .75f, 400, h4 * 2.5f);
         Color buttonColor = Color.GREEN;
-        if (User.capybaras.compareTo(cost) < 0) buttonColor = Color.GRAY;
+        if (User.capybaras.compareTo(currentCost) < 0) buttonColor = Color.GRAY;
         else if (buttonHeld) buttonColor = Color.LIME;
         batch.setColor(buttonColor);
         pixel.draw(batch, getX() + buyButton.x, getY() + buyButton.y, buyButton.width, buyButton.height);
         batch.setColor(Color.WHITE);
-        BigInteger intCost = cost.toBigInteger();
+        BigInteger intCost = currentCost.toBigInteger();
         fontSmall.draw(batch, User.toSmallString(intCost, 3), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .7f + s2);
         fontTiny.draw(batch, User.toBla(intCost), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .25f + t2);
     }
 
     private static class GeneratorData {
-        String initialCost, firstCost, firstWin, growth;
+        String initialCost, firstWin, cpsGrowth, costGrowth;
         long seed;
-
-        public GeneratorData() {
-        }
 
         public void copyTo(Generator g) {
             g.random = new Random(seed);
             g.currentLevel = 0;
-            g.initialCost = new BigDecimal(initialCost);
+            g.currentCost = new BigDecimal(initialCost);
             g.currentCPS = BigDecimal.ZERO;
-            g.currentCost = new BigDecimal(firstCost);
             g.currentCPS = new BigDecimal(firstWin);
-            g.growth = new BigDecimal(growth);
+            g.cpsGrowth = new BigDecimal(cpsGrowth);
+            g.costGrowth = new BigDecimal(costGrowth);
         }
     }
 }

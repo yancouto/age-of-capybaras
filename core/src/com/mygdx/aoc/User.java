@@ -26,7 +26,6 @@ public class User {
     static public BigDecimal kapivarium, kps;
     static public String[] powerName;
     static private float cur20 = 0.f, curCap = 0.f, nextCap = 15.f;
-    static public BigDecimal clickMultiplier = BigDecimal.ONE;
 
     static {
         capybaras = cps = BigDecimal.ZERO;
@@ -41,7 +40,7 @@ public class User {
      */
     static public void update(float dt) {
         BigDecimal delta = new BigDecimal(dt);
-        capybaras = capybaras.add(cps.multiply(delta));
+        addCapybara(cps.multiply(delta));
         kapivarium = kapivarium.add(kps.multiply(delta));
         cur20 += dt;
         if (cur20 >= 20) {
@@ -96,20 +95,29 @@ public class User {
         if (prefs.contains("userData")) {
             Data d = ResourceManager.json.fromJson(Data.class, prefs.getString("userData"));
             capybaras = new BigDecimal(new BigInteger(d.c));
-            cps = new BigDecimal(new BigInteger(d.cps));
-            cpc = new BigDecimal(new BigInteger(d.cpc));
             kapivarium = new BigDecimal(new BigInteger(d.k));
             kps = new BigDecimal(new BigInteger(d.kps));
         }
         addPast(prefs.getLong("time", System.currentTimeMillis()));
     }
 
+
+    /**
+     * Multiplies current CPC by {@code num}
+     *
+     * @param num amount to multiply CPC
+     */
+    static public void multiplyCPC(BigDecimal num) {
+        cpc = cpc.multiply(num);
+    }
+
     /**
      * Simulates the click o the Matriarch Capybara
      */
     static public void capybaraClick() {
-        capybaras = capybaras.add(cpc.multiply(clickMultiplier));
+        addCapybara(cpc);
         CapybaraScreen.instance().addCapybara();
+        CapybaraScreen.instance().addWin("+" + toSmallString(cpc.toBigInteger(), 1) + " " + toBla(cpc.toBigInteger()));
     }
 
     /**
@@ -120,7 +128,7 @@ public class User {
     static public void addPast(long prev) {
         double d = (System.currentTimeMillis() - prev) / 1000.;
         BigDecimal dt = new BigDecimal(d);
-        capybaras = capybaras.add(cps.multiply(dt));
+        addCapybara(cps.multiply(dt));
         kapivarium = kapivarium.add(kps.multiply(dt));
         System.out.println(d + " seconds since last visit");
     }
@@ -133,6 +141,24 @@ public class User {
         cps = cps.add(num);
     }
 
+    /**
+     * Adds {@code num} capybaras to the current number
+     *
+     * @param num Capybaras to be added
+     */
+    static public void addCapybara(BigDecimal num) {
+        capybaras = capybaras.add(num);
+    }
+
+    /**
+     * Removes {@code num} capybaras from the current number
+     * Assumes {@code num} is smaller than the current number of Capybaras
+     *
+     * @param num Capybaras to be removed
+     */
+    static public void removeCapybara(BigDecimal num) {
+        capybaras = capybaras.subtract(num);
+    }
     /**
      * No description
      *
@@ -184,13 +210,11 @@ public class User {
      * @see User#saveGame()
      */
     private static class Data {
-        String c, cps, cpc;
+        String c;
         String k, kps;
 
         Data reset() {
             c = User.capybaras.toBigInteger().toString();
-            cps = User.cps.toBigInteger().toString();
-            cpc = User.cpc.toBigInteger().toString();
             k = User.kapivarium.toBigInteger().toString();
             kps = User.kps.toBigInteger().toString();
             return this;
