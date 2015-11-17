@@ -39,7 +39,6 @@ public class AccessoryScreen implements GameScreen {
 
     private AccessoryScreen() {
 
-//        Same as main screen from here...
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
 
         numberFont = ResourceManager.getFont("goodDog", 185);
@@ -106,7 +105,6 @@ public class AccessoryScreen implements GameScreen {
                 return false;
             }
         });
-//        ...to here.
 
         TextButton.TextButtonStyle textButtonStyle;
         textButtonStyle = new TextButton.TextButtonStyle(
@@ -174,9 +172,9 @@ public class AccessoryScreen implements GameScreen {
         stage.addActor(tabs);
 
         tabs.bottom();
-        tabs.add(helmet).maxSize(350).center().bottom().padRight(10).padLeft(40).padBottom(1920 * .3f).padTop(0).width(350);
-        tabs.add(head).maxSize(350).center().bottom().padRight(10).padLeft(10).padBottom(1920 * .3f).padTop(0).width(350);
-        tabs.add(face).maxSize(350).center().bottom().padRight(40).padLeft(10).padBottom(1920 * .3f).padTop(0).width(350);
+        tabs.add(helmet).maxSize(350).center().bottom().padRight(10).padLeft(40).padBottom(1920 * .2f).padTop(0).width(350);
+        tabs.add(head).maxSize(350).center().bottom().padRight(10).padLeft(10).padBottom(1920 * .2f).padTop(0).width(350);
+        tabs.add(face).maxSize(350).center().bottom().padRight(40).padLeft(10).padBottom(1920 * .2f).padTop(0).width(350);
 
         scrollUI();
     }
@@ -210,19 +208,19 @@ public class AccessoryScreen implements GameScreen {
 
         scrollPaneHelmet = new ScrollPane(accHelmet);
         scrollPaneHelmet.setPosition(0, 0);
-        scrollPaneHelmet.setSize(1080, 1920 * .3f);
+        scrollPaneHelmet.setSize(1080, 1920 * .2f);
         scrollPaneHelmet.setVisible(true);
         stage.addActor(scrollPaneHelmet);
 
         scrollPaneHead = new ScrollPane(accHead);
         scrollPaneHead.setPosition(0, 0);
-        scrollPaneHead.setSize(1080, 1920 * .3f);
+        scrollPaneHead.setSize(1080, 1920 * .2f);
         scrollPaneHead.setVisible(false);
         stage.addActor(scrollPaneHead);
 
         scrollPaneFace = new ScrollPane(accFace);
         scrollPaneFace.setPosition(0, 0);
-        scrollPaneFace.setSize(1080, 1920 * .3f);
+        scrollPaneFace.setSize(1080, 1920 * .2f);
         scrollPaneFace.setVisible(false);
         stage.addActor(scrollPaneFace);
     }

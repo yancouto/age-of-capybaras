@@ -30,14 +30,14 @@ public class Accessory extends Widget {
     public Integer type; //0: helmet; 1:head; 2:face.
     public boolean purchased, equiped;
     public String imageName;
-    private Drawable image;
+    public Drawable image;
     private BitmapFont fontSmall, fontBig, fontTiny;
     private BigDecimal price;
     private Color backColor, fillColor;
     private Rectangle actionButton = new Rectangle();
 
     public Accessory(FileHandle file) {
-
+        final Accessory self = this;
         name = file.nameWithoutExtension().substring(3);
 
         ResourceManager.json.fromJson(AccessoryData.class, file).copyTo(this);
@@ -48,7 +48,13 @@ public class Accessory extends Widget {
 
         if (!purchased) buttonState = price.toString();
         else if (!equiped) buttonState = "Equip";
-        else buttonState = "Unequip";
+        else {
+            Capybara.equipAccessory(this);
+            if (equiped)
+                buttonState = "Unequip";
+            else
+                buttonState = "Equip";
+        }
         FileHandle f = Gdx.files.internal("accessory-images/" + imageName);
         Texture t = new Texture(f);
         ResourceManager.skin.add(imageName, t);
@@ -76,10 +82,10 @@ public class Accessory extends Widget {
                         purchased = true;
                     } else if (purchased && equiped) {
                         buttonState = "Equip";
-                        equiped = false;
+                        Capybara.unequipAccessory(self);
                     } else if (purchased && !equiped) {
                         buttonState = "Unequip";
-                        equiped = true;
+                        Capybara.equipAccessory(self);
                     }
             }
         });
@@ -95,8 +101,10 @@ public class Accessory extends Widget {
         pixel = ResourceManager.skin.getDrawable("pixel");
         FileHandle[] accs = Gdx.files.internal("accessory").list();
         accessories = new Accessory[accs.length];
-        for (int i = 0; i < accs.length; i++)
+        for (int i = 0; i < accs.length; i++) {
+//            System.out.println(accs[i]);
             accessories[i] = new Accessory(accs[i]);
+        }
     }
 
     /**
@@ -145,7 +153,7 @@ public class Accessory extends Widget {
         float h4 = getHeight() / 4.f;
         float s2 = fontSmall.getLineHeight() / 2.f, t2 = fontTiny.getLineHeight() / 2.f;
         batch.setColor(Color.WHITE);
-        image.draw(batch, getX() - 100, getY() - 1920 * .3f, 1080 * .5f, 1920 * .5f);
+        image.draw(batch, getX() - 150, getY() - 1920 * .26f, 1080 * .5f, 1920 * .5f);
         batch.setColor(fillColor);
         fontTiny.draw(batch, name, 50 + getX() + 200, getY() + h4 * 2.f + s2);
         batch.setColor(Color.LIME);

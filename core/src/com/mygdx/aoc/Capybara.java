@@ -10,6 +10,7 @@ import com.mygdx.aoc.manager.ResourceManager;
 
 public class Capybara extends Actor {
     public final long creation;
+    public static Accessory helmet = null, head = null, face = null;
     private Vector2 v;
     private float rot;
     private TextureRegion capybara;
@@ -25,6 +26,52 @@ public class Capybara extends Actor {
         setOrigin(getWidth() / 2.f, getHeight() / 2.f);
         setRotation((float) (Math.random() * 360));
         rot = (float) Math.random() * 80 - 40;
+    }
+
+    static void equipAccessory (Accessory acc) {
+        System.out.println(acc.name);
+        if (acc.type == 0) {
+            if (head != null) {
+                head.equiped = false;
+                head = null;
+            }
+            if (face != null) {
+                face.equiped = false;
+                face = null;
+            }
+            helmet = acc;
+        }
+        else if (acc.type == 1) {
+            if (helmet != null) {
+                helmet.equiped = false;
+                helmet = null;
+            }
+            head = acc;
+        }
+        else if (acc.type == 2) {
+            if (helmet != null) {
+                helmet.equiped = false;
+                helmet = null;
+            }
+            face = acc;
+        }
+    }
+
+    static void unequipAccessory(Accessory acc) {
+        System.out.println(acc.name);
+        if (acc.equals(helmet)) {
+            System.out.println(acc.name);
+            helmet.equiped = false;
+            helmet = null;
+        }
+        else if (acc.equals(head)) {
+            head.equiped = false;
+            head = null;
+        }
+        else if (acc.equals(face)) {
+            face.equiped = false;
+            face = null;
+        }
     }
 
     static public void loadGame() {
