@@ -122,7 +122,8 @@ public class Generator extends Widget {
      */
     public static void loadGame() {
         pixel = ResourceManager.skin.getDrawable("pixel");
-        fail = ResourceManager.skin.get("negative", Sound.class);
+        // TODO: Remove this commented
+        //fail = ResourceManager.skin.get("negative", Sound.class);
         FileHandle[] gens = Gdx.files.internal("generator").list();
         generators = new Generator[gens.length];
         for (int i = 0; i < gens.length; i++)

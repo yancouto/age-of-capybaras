@@ -126,8 +126,7 @@ public class Upgrade extends Widget {
             User.capybaras = User.capybaras.subtract(cost);
             CapybaraScreen.advanceAge();
         }
-        BigDecimal curAge = new BigDecimal(CapybaraScreen.currentAge());
-        cost = cost.multiply(curAge);
+        cost = agesCost[CapybaraScreen.currentAge() - 1];
         return true;
     }
 
@@ -174,11 +173,18 @@ public class Upgrade extends Widget {
         public void copyTo(Upgrade u) {
             u.name = name;
             u.description = description;
-            u.cost = new BigDecimal(cost);
             u.type = type;
             u.generatorName = generatorName;
             u.multiplier = new BigDecimal(multiplier);
             u.random = new Random(seed);
+            if (type.equals("age")) {
+                String[] agesCost = cost.split("\\s*,\\s*");
+                u.agesCost = new BigDecimal[agesCost.length];
+                for (int i = 0; i < agesCost.length; i++)
+                    u.agesCost[i] = new BigDecimal(agesCost[i]);
+            }
+            else
+                u.cost = new BigDecimal(cost);
         }
     }
 }
