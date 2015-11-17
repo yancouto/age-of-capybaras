@@ -1,0 +1,7 @@
+{
+  "initialCost": 666666666666666,
+  "firstWin": 1500000,
+  "cpsGrowth": 1.15,
+  "costGrowth": 1.3,
+  "seed": 696969
+}
