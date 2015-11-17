@@ -2,6 +2,7 @@ package com.mygdx.aoc;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -49,6 +50,7 @@ public class Generator extends Widget {
      */
     public static Generator[] generators;
     private static Drawable pixel;
+    private static Sound fail;
     public final String name;
     private BitmapFont fontSmall, fontBig, fontTiny;
     private BigDecimal initialCost, currentCost, currentCPS, growth;
@@ -81,16 +83,18 @@ public class Generator extends Widget {
         addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 System.out.println("Hey you clicked " + name + " at (" + x + ", " + y + ")");
-                BigDecimal cost = currentLevel == 0 ? initialCost : currentCost;
-                if (!buttonHeld && buyButton.contains(x, y) && cost.compareTo(User.capybaras) <= 0)
+                if (!buttonHeld && buyButton.contains(x, y))
                     buttonHeld = true;
                 return buttonHeld;
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (buttonHeld && buyButton.contains(x, y))
-                    buyLevel(true);
                 buttonHeld = false;
+                if (!buyButton.contains(x, y)) return;
+                BigDecimal cost = currentLevel == 0 ? initialCost : currentCost;
+                if (User.capybaras.compareTo(cost) >= 0)
+                    buyLevel(true);
+                else fail.play(ResourceManager.prefs.getInteger("soundVolume") / 100.f);
             }
         });
     }
@@ -102,6 +106,7 @@ public class Generator extends Widget {
      */
     public static void loadGame() {
         pixel = ResourceManager.skin.getDrawable("pixel");
+        fail = ResourceManager.skin.get("negative", Sound.class);
         FileHandle[] gens = Gdx.files.internal("generator").list();
         generators = new Generator[gens.length];
         for (int i = 0; i < gens.length; i++)
@@ -184,8 +189,8 @@ public class Generator extends Widget {
         }
         buyButton.set(getWidth() * .55f, h4 * .75f, 400, h4 * 2.5f);
         Color buttonColor = Color.GREEN;
-        if (buttonHeld) buttonColor = Color.LIME;
-        else if (User.capybaras.compareTo(cost) < 0) buttonColor = Color.GRAY;
+        if (User.capybaras.compareTo(cost) < 0) buttonColor = Color.GRAY;
+        else if (buttonHeld) buttonColor = Color.LIME;
         batch.setColor(buttonColor);
         pixel.draw(batch, getX() + buyButton.x, getY() + buyButton.y, buyButton.width, buyButton.height);
         batch.setColor(Color.WHITE);
