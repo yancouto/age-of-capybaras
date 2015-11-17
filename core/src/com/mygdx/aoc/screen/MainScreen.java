@@ -169,10 +169,15 @@ public class MainScreen implements GameScreen {
                     u.buyGenerator(false);
             }
             else {
-                if (u.getType().equals("age"))
+                if (!u.getType().equals("age")) {
+                    upgrades.add(u);
+                    upgrades.row();
+                }
+                else if (u.getType().equals("age") && !u.isFinalAge()) {
                     u.buyNextAge(false);
-                upgrades.add(u);
-                upgrades.row();
+                    upgrades.add(u);
+                    upgrades.row();
+                }
             }
         }
 

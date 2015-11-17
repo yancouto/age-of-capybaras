@@ -30,7 +30,7 @@ public class Upgrade extends Widget {
     private BigDecimal cost, multiplier;
     private boolean bought;
     private Generator gen = null;
-    private BigDecimal[] agesCost;
+    private BigDecimal[] agesCost = null;
 
     public Upgrade (FileHandle file) {
         ResourceManager.json.fromJson(UpgradeData.class, file).copyTo(this);
@@ -125,6 +125,8 @@ public class Upgrade extends Widget {
             if (User.capybaras.compareTo(cost) < 0) return false;
             User.removeCapybara(cost);
             CapybaraScreen.advanceAge();
+            if (CapybaraScreen.currentAge() == agesCost.length)
+                MainScreen.instance().upgrades.removeActor(this);
         }
         cost = agesCost[CapybaraScreen.currentAge() - 1];
         return true;
@@ -136,6 +138,13 @@ public class Upgrade extends Widget {
 
     public boolean getBought() {
         return bought;
+    }
+
+    public boolean isFinalAge () {
+        if (agesCost != null)
+            if (agesCost.length == CapybaraScreen.currentAge())
+                return true;
+        return false;
     }
 
     @Override
