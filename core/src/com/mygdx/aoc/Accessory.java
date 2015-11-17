@@ -49,7 +49,6 @@ public class Accessory extends Widget {
         if (!purchased) buttonState = price.toString();
         else if (!equiped) buttonState = "Equip";
         else buttonState = "Unequip";
-
         FileHandle f = Gdx.files.internal("accessory-images/" + imageName);
         Texture t = new Texture(f);
         ResourceManager.skin.add(imageName, t);
@@ -145,8 +144,10 @@ public class Accessory extends Widget {
         batch.setColor(fillColor);
         float h4 = getHeight() / 4.f;
         float s2 = fontSmall.getLineHeight() / 2.f, t2 = fontTiny.getLineHeight() / 2.f;
-        image.draw(batch, getX() + 20, getY() - 1920 * .06f, 1080 * .22f, 1920 * .22f);
-        fontSmall.draw(batch, name, 50 + getX() + 200, getY() + h4 * 2.f + s2);
+        batch.setColor(Color.WHITE);
+        image.draw(batch, getX() - 100, getY() - 1920 * .3f, 1080 * .5f, 1920 * .5f);
+        batch.setColor(fillColor);
+        fontTiny.draw(batch, name, 50 + getX() + 200, getY() + h4 * 2.f + s2);
         batch.setColor(Color.LIME);
         actionButton.set(50 + getWidth() * .55f, h4 * .75f, 300, h4 * 2.5f);
         pixel.draw(batch, getX() + actionButton.x, getY() + actionButton.y, actionButton.width, actionButton.height);
@@ -155,7 +156,7 @@ public class Accessory extends Widget {
             if (equiped)
                 fontSmall.draw(batch, buttonState, getX() + actionButton.x + getWidth() * 0.03f, getY() + actionButton.y + actionButton.height * .7f + s2);
             else
-                fontSmall.draw(batch, buttonState, 50 + getX() + actionButton.x + getWidth() * 0.03f, getY() + actionButton.y + actionButton.height * .7f + s2);
+                fontSmall.draw(batch, buttonState, 30 + getX() + actionButton.x + getWidth() * 0.03f, getY() + actionButton.y + actionButton.height * .7f + s2);
         }
         else {
             BigInteger p = price.toBigInteger();
