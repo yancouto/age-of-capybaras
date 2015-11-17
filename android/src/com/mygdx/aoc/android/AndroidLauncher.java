@@ -1,7 +1,6 @@
 package com.mygdx.aoc.android;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -10,6 +9,9 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 import com.mygdx.aoc.AgeOfCapybaras;
+import com.mygdx.aoc.User;
+
+import java.math.BigDecimal;
 
 public class AndroidLauncher extends AndroidApplication implements com.admob.AdsController {
 
@@ -31,7 +33,11 @@ public class AndroidLauncher extends AndroidApplication implements com.admob.Ads
         @Override
         public void onAdClosed() {
             end = System.nanoTime();
-            System.out.println("Ad opened for " + elapsedTime() + "seconds");
+            double eTime = elapsedTime();
+            requestAd();
+            if (eTime >= 20) {
+                User.kps = User.kps.add(BigDecimal.ONE); // Bonus for watching the ad.
+            }
             super.onAdClosed();
         }
 
@@ -49,17 +55,8 @@ public class AndroidLauncher extends AndroidApplication implements com.admob.Ads
     private InterstitialAd mInterstitialAd;
     private MyAdListener mAdListener = new MyAdListener();
 
-
-
-
-
-//    public AdManager adM; // AdManager usage example
-
     @Override
     protected void onPause() {
-
-//        adM.requestAd(); // AdManager usage example
-
         super.onPause();
         AgeOfCapybaras.onPause();
     }
@@ -67,13 +64,6 @@ public class AndroidLauncher extends AndroidApplication implements com.admob.Ads
     @Override
     protected void onResume() {
         super.onResume();
-
-//        double time;                            //
-//        adM.displayAd();                        //
-//        time = adM.elapsedTime();               // AdManager usage example
-//        if (time >= 20)                         //
-//            Log.v("ETime", "Time = " + time);   //
-
         AgeOfCapybaras.onResume();
     }
 
@@ -94,22 +84,31 @@ public class AndroidLauncher extends AndroidApplication implements com.admob.Ads
 
     @Override
     public void requestAd() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 //        Requests an ad.
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .build();
-//        Um id gerado para uma conta no AdMob deve ser colado no lugar de
-//        AdRequest.DEVICE_ID_EMULATOR entre aspas quando o aplicativo estiver
-//        pronto para ir para a Play Store.
-        mInterstitialAd.loadAd(adRequest);
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                        .build();
+//        An ID generated for an AdMob account must be pasted in
+//        "AdRequest.DEVICE_ID_EMULATOR" place when the app is completed.
+                mInterstitialAd.loadAd(adRequest);
+            }
+        });
     }
 
     @Override
     public void displayAd() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 //        Checks that an ad is loaded and then display it.
-        if (mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                }
+            }
+        });
     }
 
     @Override

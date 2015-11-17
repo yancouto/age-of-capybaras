@@ -39,9 +39,12 @@ public class AccessoryScreen implements GameScreen {
     private Table accHelmet, accHead, accFace;
     private BitmapFont numberFont, nameFont;
     private AdsController adsController;
+    private AccessoryScreen self;
 
     private AccessoryScreen(final AdsController adsController) {
         this.adsController = adsController;
+
+        self = this;
 
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
 
@@ -60,19 +63,12 @@ public class AccessoryScreen implements GameScreen {
                 ResourceManager.skin.newDrawable("adsButton", Color.DARK_GRAY));
         ads.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Requesting ad");
-                adsController.requestAd();
-                System.out.println("Ad requested");
                 return true;
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (ads.hit(x, y, true) == null) return;
-                System.out.println("AQUIIIIII");
-                adsController.displayAd();
-                System.out.println("AQUIIIIII222");
-
-
+                self.adsController.displayAd();
             }
         });
         back = new Button(ResourceManager.skin.getDrawable("backButton1"),
@@ -84,7 +80,6 @@ public class AccessoryScreen implements GameScreen {
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (back.hit(x, y, true) == null) return;
-                System.out.println("Going back");
                 while (ScreenManager.popScreen() != AccessoryScreen.instance(adsController)) ;
                 ScreenManager.pushScreen(MainScreen.instance());
             }
@@ -189,11 +184,8 @@ public class AccessoryScreen implements GameScreen {
 
     public static AccessoryScreen instance(AdsController adsController) {
         if (accessoryScreen == null) accessoryScreen = new AccessoryScreen(adsController);
+        adsController.requestAd();
         return accessoryScreen;
-    }
-
-    public void setAdsController(AdsController adsController) {
-        this.adsController = adsController;
     }
 
     /**
