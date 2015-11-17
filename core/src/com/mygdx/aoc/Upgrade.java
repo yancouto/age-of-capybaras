@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.mygdx.aoc.manager.ResourceManager;
 import com.mygdx.aoc.screen.CapybaraScreen;
+import com.mygdx.aoc.screen.MainScreen;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -22,24 +23,32 @@ public class Upgrade extends Widget {
     public static Upgrade[] upgrades;
     private static Drawable pixel;
     private String name, description, generatorName, type;
-    private Color colorActive, colorInactive;
+    private Color fillColor;
     private BitmapFont fontSmall, fontTiny;
     private Rectangle buyButton = new Rectangle();
     private Random random;
     private BigDecimal cost, multiplier;
-    private boolean bought = false;
+    private boolean bought;
+    private Generator gen = null;
+    private BigDecimal[] agesCost;
 
     public Upgrade (FileHandle file) {
         ResourceManager.json.fromJson(UpgradeData.class, file).copyTo(this);
         float a = random.nextFloat(), b = random.nextFloat(), c = random.nextFloat();
-        float mult1 = 1.25f / (a + b + c), mult2 = 2.f / (a + b + c);
-        colorInactive = new Color(a * mult1, b * mult1, c * mult1, 1);
-        colorActive = new Color(a * mult2, b * mult2, c * mult2, 1);
+
+        float mult1 = 1.25f / (a + b + c);
+        fillColor = new Color(a * mult1, b * mult1, c * mult1, 1);
         fontTiny = ResourceManager.getFont("goodDog", 50);
         fontSmall = ResourceManager.getFont("goodDog", 80);
 
-        //Preferences prefs = ResourceManager.prefs;
-        //if (prefs.getBoolean(name + "Upgrade", false)) buy();
+        Preferences prefs = ResourceManager.prefs;
+        bought = prefs.getBoolean(name + "Upgrade", false);
+
+        if (type.equals("generator"))
+            for (Generator g : Generator.generators)
+                if (g.getName().equals(generatorName))
+                    gen = g;
+
 
         addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -47,8 +56,14 @@ public class Upgrade extends Widget {
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (buyButton.contains(x, y) && (!bought || type.equals("age")))
-                    buy();
+                if (buyButton.contains(x, y)) {
+                    if (type.equals("click"))
+                        buyClick(true);
+                    else if (type.equals("generator"))
+                        buyGenerator(true);
+                    else if (type.equals("age"))
+                        buyNextAge(true);
+                }
             }
         });
     }
@@ -80,36 +95,53 @@ public class Upgrade extends Widget {
         return 1920 * .125f;
     }
 
-    public boolean buy() {
-        if (User.capybaras.compareTo(cost) < 0) return false;
+    public boolean buyGenerator(boolean pay) {
+        if (gen != null && gen.getCurrentLevel() > 0) {
+            if (pay) {
+                if (User.capybaras.compareTo(cost) < 0) return false;
+                User.capybaras = User.capybaras.subtract(cost);
+                bought = true;
+                MainScreen.instance().upgrades.removeActor(this);
+            }
+            gen.setGrowth(multiplier);
+            return true;
+        }
+        return false;
+    }
 
-        if (type.equals("click")) {
-            User.clickMultiplier = multiplier;
+    public boolean buyClick(boolean pay) {
+        if (pay) {
+            if (User.capybaras.compareTo(cost) < 0) return false;
             User.capybaras = User.capybaras.subtract(cost);
             bought = true;
+            MainScreen.instance().upgrades.removeActor(this);
         }
-        else if (type.equals("generator")) {
-            for (Generator g : Generator.generators) {
-                if (g.getName().equals(generatorName) && g.getCurrentLevel() > 0) {
-                    g.setGrowth(multiplier);
-                    User.capybaras = User.capybaras.subtract(cost);
-                    bought = true;
-                }
-                return false;
-            }
-        }
-        else if (type.equals("age")) {
-            CapybaraScreen.advanceAge();
-            BigDecimal curAge = new BigDecimal(CapybaraScreen.currentAge());
-            User.capybaras = User.capybaras.subtract(cost);
-            cost = cost.multiply(curAge);
-        }
+        User.clickMultiplier = multiplier;
         return true;
+    }
+
+    public boolean buyNextAge(boolean pay) {
+        if (pay) {
+            if (User.capybaras.compareTo(cost) < 0) return false;
+            User.capybaras = User.capybaras.subtract(cost);
+            CapybaraScreen.advanceAge();
+        }
+        BigDecimal curAge = new BigDecimal(CapybaraScreen.currentAge());
+        cost = cost.multiply(curAge);
+        return true;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public boolean getBought() {
+        return bought;
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.setColor(bought ? colorInactive : colorActive);
+        batch.setColor(fillColor);
         pixel.draw(batch, getX(), getY(), getWidth(), getHeight());
         float h4 = getHeight() / 4.f;
         float s2 = fontSmall.getLineHeight() / 2.f, t2 = fontTiny.getLineHeight() / 2.f;
@@ -120,19 +152,20 @@ public class Upgrade extends Widget {
         else
             fontTiny.draw(batch, description + " x" + multiplier, getX() + 25, getY() + 2f * s2);
 
-        if (!bought || type.equals("age")) {
-            BigInteger ncost = cost.toBigInteger();
+        BigInteger ncost = cost.toBigInteger();
+        if (User.capybaras.compareTo(cost) < 0 || (gen != null && gen.getCurrentLevel() == 0))
+            batch.setColor(Color.GRAY);
+        else
             batch.setColor(Color.LIME);
-            buyButton.set(getWidth() * .55f, h4 * .75f, 400, h4 * 2.5f);
-            pixel.draw(batch, getX() + buyButton.x, getY() + buyButton.y, buyButton.width, buyButton.height);
-            batch.setColor(Color.WHITE);
-            fontSmall.draw(batch, User.toSmallString(ncost, 3), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .7f + s2);
-            fontTiny.draw(batch, User.toBla(ncost), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .25f + t2);
-        }
+        buyButton.set(getWidth() * .55f, h4 * .75f, 400, h4 * 2.5f);
+        pixel.draw(batch, getX() + buyButton.x, getY() + buyButton.y, buyButton.width, buyButton.height);
+        batch.setColor(Color.WHITE);
+        fontSmall.draw(batch, User.toSmallString(ncost, 3), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .7f + s2);
+        fontTiny.draw(batch, User.toBla(ncost), getX() + buyButton.x + getWidth() * 0.015f, getY() + buyButton.y + buyButton.height * .25f + t2);
     }
 
     private static class UpgradeData {
-        String name, cost, description, type, generatorName, multiplier;
+        String name, description, cost, type, generatorName, multiplier;
         long seed;
 
         public UpgradeData() {

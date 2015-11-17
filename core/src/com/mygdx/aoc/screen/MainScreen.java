@@ -33,7 +33,8 @@ public class MainScreen implements GameScreen {
     private Table table;
     private Button option, accessory;
     private ScrollPane scrollPaneGenerators, scrollPaneUpgrades;
-    private Table generators, upgrades;
+    private Table generators;
+    public Table upgrades;
     private BitmapFont numberFont, nameFont;
 
     private MainScreen() {
@@ -162,8 +163,18 @@ public class MainScreen implements GameScreen {
 
         upgrades = new Table();
         for (Upgrade u : Upgrade.upgrades) {
-            upgrades.add(u);
-            upgrades.row();
+            if (u.getBought()) {
+                if (u.getType().equals("click"))
+                    u.buyClick(false);
+                else if (u.getType().equals("generator"))
+                    u.buyGenerator(false);
+            }
+            else {
+                if (u.getType().equals("age"))
+                    u.buyNextAge(false);
+                upgrades.add(u);
+                upgrades.row();
+            }
         }
 
         scrollPaneGenerators = new ScrollPane(generators);
