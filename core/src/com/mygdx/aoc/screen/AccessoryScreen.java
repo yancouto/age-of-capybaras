@@ -1,5 +1,6 @@
 package com.mygdx.aoc.screen;
 
+import com.admob.AdsController;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.aoc.Accessory;
+import com.mygdx.aoc.AgeOfCapybaras;
 import com.mygdx.aoc.User;
 import com.mygdx.aoc.manager.GameScreen;
 import com.mygdx.aoc.manager.ResourceManager;
@@ -36,8 +38,10 @@ public class AccessoryScreen implements GameScreen {
     private ScrollPane scrollPaneHelmet, scrollPaneHead, scrollPaneFace;
     private Table accHelmet, accHead, accFace;
     private BitmapFont numberFont, nameFont;
+    private AdsController adsController;
 
-    private AccessoryScreen() {
+    private AccessoryScreen(final AdsController adsController) {
+        this.adsController = adsController;
 
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
 
@@ -56,12 +60,19 @@ public class AccessoryScreen implements GameScreen {
                 ResourceManager.skin.newDrawable("adsButton", Color.DARK_GRAY));
         ads.addListener(new InputListener() {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("Requesting ad");
+                adsController.requestAd();
+                System.out.println("Ad requested");
                 return true;
             }
 
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (ads.hit(x, y, true) == null) return;
-//                TODO: Call ads
+                System.out.println("AQUIIIIII");
+                adsController.displayAd();
+                System.out.println("AQUIIIIII222");
+
+
             }
         });
         back = new Button(ResourceManager.skin.getDrawable("backButton1"),
@@ -74,7 +85,7 @@ public class AccessoryScreen implements GameScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (back.hit(x, y, true) == null) return;
                 System.out.println("Going back");
-                while (ScreenManager.popScreen() != AccessoryScreen.instance()) ;
+                while (ScreenManager.popScreen() != AccessoryScreen.instance(adsController)) ;
                 ScreenManager.pushScreen(MainScreen.instance());
             }
         });
@@ -106,7 +117,6 @@ public class AccessoryScreen implements GameScreen {
 
         TextButton.TextButtonStyle textButtonStyle;
         textButtonStyle = new TextButton.TextButtonStyle(
-//                TODO: Find good colors
                 ResourceManager.skin.newDrawable("pixel", Color.GOLD), // up
                 ResourceManager.skin.newDrawable("pixel", Color.GOLDENROD), // down
                 ResourceManager.skin.newDrawable("pixel", Color.ORANGE), // check
@@ -177,9 +187,13 @@ public class AccessoryScreen implements GameScreen {
         scrollUI();
     }
 
-    public static AccessoryScreen instance() {
-        if (accessoryScreen == null) accessoryScreen = new AccessoryScreen();
+    public static AccessoryScreen instance(AdsController adsController) {
+        if (accessoryScreen == null) accessoryScreen = new AccessoryScreen(adsController);
         return accessoryScreen;
+    }
+
+    public void setAdsController(AdsController adsController) {
+        this.adsController = adsController;
     }
 
     /**

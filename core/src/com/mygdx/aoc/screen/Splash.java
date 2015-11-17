@@ -1,6 +1,7 @@
 package com.mygdx.aoc.screen;
 
 
+import com.admob.AdsController;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,8 +18,10 @@ public class Splash implements GameScreen {
     private final float waitTime = 2.5f;
     OrthographicCamera cam;
     private float total;
+    private AdsController adsController;
 
-    public Splash() {
+    public Splash(AdsController adsController) {
+        this.adsController = adsController;
         font = ResourceManager.getFont("goodDog", 180);
         batch = ResourceManager.batch;
         total = 0.f;
@@ -51,7 +54,9 @@ public class Splash implements GameScreen {
         if(total > waitTime || Gdx.input.isTouched()) {
             while (ScreenManager.popScreen() != this) ;
             ScreenManager.pushScreen(CapybaraScreen.instance());
-            ScreenManager.pushScreen(MainScreen.instance());
+            MainScreen mainScreen = MainScreen.instance();
+            mainScreen.setAdsController(adsController);
+            ScreenManager.pushScreen(mainScreen);
             dispose();
         }
     }

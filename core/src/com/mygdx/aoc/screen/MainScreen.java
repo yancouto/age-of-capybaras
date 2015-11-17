@@ -1,5 +1,6 @@
 package com.mygdx.aoc.screen;
 
+import com.admob.AdsController;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
@@ -36,6 +37,7 @@ public class MainScreen implements GameScreen {
     private ScrollPane scrollPaneGenerators, scrollPaneUpgrades;
     private Table generators;
     private BitmapFont numberFont, nameFont;
+    private AdsController adsController;
 
     private MainScreen() {
         stage = new Stage(new FitViewport(1080, 1920), ResourceManager.batch);
@@ -57,8 +59,8 @@ public class MainScreen implements GameScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (accessory.hit(x, y, true) == null) return;
                 System.out.println("Going to Accessory");
-                while (ScreenManager.popScreen() != MainScreen.this) ;
-                ScreenManager.pushScreen(AccessoryScreen.instance());
+                while (ScreenManager.popScreen() != MainScreen.this);
+                ScreenManager.pushScreen(AccessoryScreen.instance(adsController));
             }
         });
         option = new Button(ResourceManager.skin.getDrawable("configButton"),
@@ -147,6 +149,10 @@ public class MainScreen implements GameScreen {
     public static MainScreen instance() {
         if (mainScreen == null) mainScreen = new MainScreen();
         return mainScreen;
+    }
+
+    public void setAdsController(AdsController adsController) {
+        this.adsController = adsController;
     }
 
     /**

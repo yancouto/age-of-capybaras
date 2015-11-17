@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.mygdx.aoc.manager.ResourceManager;
 import com.mygdx.aoc.manager.ScreenManager;
 import com.mygdx.aoc.screen.Splash;
+import com.admob.AdsController;
 
 /**
  * Main class, initializes all basic stuff and then creates the SplashScreen
@@ -14,6 +15,12 @@ public class AgeOfCapybaras extends Game {
      * Called when the game is closed or when the user pauses the game
      * Pausing is done by minimizing the game by pressing the home button
      */
+    public AdsController adsController;
+
+    public AgeOfCapybaras(AdsController adsController){
+        this.adsController = adsController;
+    }
+
     public static void onPause() {
         ResourceManager.saveGame();
     }
@@ -35,7 +42,7 @@ public class AgeOfCapybaras extends Game {
         ResourceManager.init();
         ScreenManager.init();
         ResourceManager.loadGame();
-        ScreenManager.pushScreen(new Splash());
+        ScreenManager.pushScreen(new Splash(adsController));
     }
 
     @Override
