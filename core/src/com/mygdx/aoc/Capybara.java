@@ -29,46 +29,43 @@ public class Capybara extends Actor {
     }
 
     static void equipAccessory (Accessory acc) {
-        System.out.println(acc.name);
+//        System.out.println(acc.name);
+        acc.buttonState = "Unequip";
         if (acc.type == 0) {
-            if (head != null) {
-                head.equiped = false;
-                head = null;
-            }
-            if (face != null) {
-                face.equiped = false;
-                face = null;
-            }
+            unequipAccessory(head);
+            unequipAccessory(face);
+            unequipAccessory(helmet);
             helmet = acc;
         }
         else if (acc.type == 1) {
-            if (helmet != null) {
-                helmet.equiped = false;
-                helmet = null;
-            }
+            unequipAccessory(helmet);
+            unequipAccessory(head);
             head = acc;
         }
         else if (acc.type == 2) {
-            if (helmet != null) {
-                helmet.equiped = false;
-                helmet = null;
-            }
+            unequipAccessory(helmet);
+            unequipAccessory(face);
             face = acc;
         }
     }
 
     static void unequipAccessory(Accessory acc) {
-        System.out.println(acc.name);
+        System.out.println("UN " + acc.name);
+        System.out.println("UN " + helmet.name);
+        if (acc == null) return;
         if (acc.equals(helmet)) {
             System.out.println(acc.name);
+            helmet.buttonState = "Equiped";
             helmet.equiped = false;
             helmet = null;
         }
         else if (acc.equals(head)) {
+            head.buttonState = "Equiped";
             head.equiped = false;
             head = null;
         }
         else if (acc.equals(face)) {
+            face.buttonState = "Equiped";
             face.equiped = false;
             face = null;
         }
