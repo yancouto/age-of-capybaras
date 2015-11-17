@@ -49,6 +49,7 @@ public class OptionsMenu implements GameScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 ResourceManager.prefs.putInteger("soundVolume", (int) ((Slider) actor).getValue());
+                ResourceManager.prefs.flush();
             }
         });
         table.add(new Image(ResourceManager.skin.getDrawable("soundEmpty"))).padRight(50);

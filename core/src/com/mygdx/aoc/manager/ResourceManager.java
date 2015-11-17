@@ -3,6 +3,7 @@ package com.mygdx.aoc.manager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -47,6 +48,12 @@ public class ResourceManager {
         for (FileHandle file : imgs)
             skin.add(file.nameWithoutExtension(), new Texture(file));
         skin.add("capybaraMap", new Pixmap(Gdx.files.internal("images/capybara.png")));
+
+        FileHandle[] sounds = Gdx.files.internal("sound").list();
+        for (FileHandle file : sounds) {
+            System.out.println("Adding " + file.nameWithoutExtension());
+            skin.add(file.nameWithoutExtension(), Gdx.audio.newSound(file), Sound.class);
+        }
     }
 
     private static void processFont(String name, int borderWidth) {
