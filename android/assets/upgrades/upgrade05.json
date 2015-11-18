@@ -1,0 +1,9 @@
+{
+  "name": "Evolved Biology",
+  "description": "Matriarch Mitosis rate",
+  "cost": 100000,
+  "type": "generator",
+  "generatorName": "Matriarch Mitosis",
+  "multiplier": 2,
+  "seed": 100000
+}

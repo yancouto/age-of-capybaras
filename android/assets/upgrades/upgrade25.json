@@ -1,0 +1,9 @@
+{
+  "name": "Dinosaurs",
+  "description": "Capybara Meteors rate",
+  "cost": 98765651116600062999211414141414142,
+  "type": "generator",
+  "generatorName": "Capybara Meteors",
+  "multiplier": 3,
+  "seed": 987123
+}

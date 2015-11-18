@@ -1,0 +1,9 @@
+{
+  "name": "Advanced Genetics",
+  "description": "Human Transformation rate",
+  "cost": 1116600062999211414141414142,
+  "type": "generator",
+  "generatorName": "Human Transformation",
+  "multiplier": 3,
+  "seed": 2221213345
+}

@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 /**
  * Static class used to keep User variables, like the number o capybaras and
- * kapivarium avaiable.
+ * kapivarium available.
  */
 public class User {
     /**

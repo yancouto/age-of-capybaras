@@ -1,0 +1,9 @@
+{
+  "name": "Star Explosion",
+  "description": "Capybara Meteors rate",
+  "cost": 9211414141414142,
+  "type": "generator",
+  "generatorName": "Capybara Meteors",
+  "multiplier": 2,
+  "seed": 12332134
+}

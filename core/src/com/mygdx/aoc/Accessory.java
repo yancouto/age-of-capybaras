@@ -62,7 +62,7 @@ public class Accessory extends Widget {
         Texture t = new Texture(f);
         ResourceManager.skin.add(imageName, t);
         Pixmap pm = new Pixmap(f);
-        ResourceManager.skin.add(imageName +"Map", pm);
+        ResourceManager.skin.add(imageName + "Map", pm);
         image = ResourceManager.skin.getDrawable(imageName);
 
 //        TODO: Find good colors
@@ -87,11 +87,9 @@ public class Accessory extends Widget {
                     if (!purchased && buyAccessory()) {
                         buttonState = "Equip";
                         purchased = true;
-                    }
-                    else if (purchased && equiped) {
+                    } else if (purchased && equiped) {
                         Capybara.unequipAccessory(self);
-                    }
-                    else if (purchased && !equiped) {
+                    } else if (purchased && !equiped) {
                         Capybara.equipAccessory(self);
                     }
             }
@@ -134,8 +132,8 @@ public class Accessory extends Widget {
     }
 
     public boolean buyAccessory() {
-        if (User.capybaras.compareTo(price) < 0) return false;
-        User.capybaras = User.capybaras.subtract(price);
+        if (User.kapivarium.compareTo(price) < 0) return false;
+        User.kapivarium = User.kapivarium.subtract(price);
         purchased = true;
         return true;
     }
@@ -162,7 +160,7 @@ public class Accessory extends Widget {
         batch.setColor(fillColor);
         fontTiny.draw(batch, name, 50 + getX() + 200, getY() + h4 * 2.f + s2);
         Color buttonColor = Color.GREEN;
-        if (!purchased && User.capybaras.compareTo(price) < 0) buttonColor = Color.GRAY;
+        if (!purchased && User.kapivarium.compareTo(price) < 0) buttonColor = Color.GRAY;
         else if (buttonHeld || equiped) buttonColor = Color.LIME;
         batch.setColor(buttonColor);
         actionButton.set(50 + getWidth() * .55f, h4 * .75f, 300, h4 * 2.5f);
@@ -174,8 +172,7 @@ public class Accessory extends Widget {
             else
                 fontSmall.draw(batch, buttonState, 30 + getX() + actionButton.x + getWidth() * 0.03f, getY() + actionButton.y + actionButton.height * .7f + s2);
 
-        }
-        else {
+        } else {
             BigInteger p = price.toBigInteger();
             fontSmall.draw(batch, User.toSmallString(p, 3), getX() + actionButton.x + getWidth() * 0.03f, getY() + actionButton.y + actionButton.height * .7f + s2);
             fontTiny.draw(batch, User.toBla(p), getX() + actionButton.x + getWidth() * 0.03f, getY() + actionButton.y + actionButton.height * .25f + t2);

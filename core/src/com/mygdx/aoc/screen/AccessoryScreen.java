@@ -14,10 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.aoc.Accessory;
-import com.mygdx.aoc.AgeOfCapybaras;
 import com.mygdx.aoc.User;
 import com.mygdx.aoc.manager.GameScreen;
 import com.mygdx.aoc.manager.ResourceManager;
@@ -102,8 +100,8 @@ public class AccessoryScreen implements GameScreen {
 
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.BACK) {
-                    while (ScreenManager.popScreen() != CapybaraScreen.instance()) ;
-                    ScreenManager.pushScreen(OptionsMenu.instance());
+                    while (ScreenManager.popScreen() != AccessoryScreen.this) ;
+                    ScreenManager.pushScreen(MainScreen.instance());
                     return true;
                 }
                 return false;
@@ -237,7 +235,7 @@ public class AccessoryScreen implements GameScreen {
 
         Batch batch = stage.getBatch();
         batch.begin();
-        BigInteger cap = User.capybaras.toBigInteger();
+        BigInteger cap = User.kapivarium.toBigInteger();
         numberFont.draw(batch, User.toSmallString(cap, 3), 315, 1920 * .91f);
         nameFont.draw(batch, User.toBla(cap), 250, 1920 * .83f);
         batch.end();

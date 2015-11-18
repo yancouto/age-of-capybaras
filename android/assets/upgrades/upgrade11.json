@@ -1,0 +1,9 @@
+{
+  "name": "Anti-Birth Control",
+  "description": "Natural Birth rate",
+  "cost": 62999211414141414142,
+  "type": "generator",
+  "generatorName": "Natural Birth",
+  "multiplier": 2,
+  "seed": 12332100341
+}

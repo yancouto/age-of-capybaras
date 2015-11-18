@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.aoc.manager.ResourceManager;
 
 public class Capybara extends Actor {
-    public final long creation;
     public static Accessory helmet = null, head = null, face = null;
+    public final long creation;
     private Vector2 v;
     private float rot;
     private TextureRegion capybara;
@@ -28,7 +28,7 @@ public class Capybara extends Actor {
         rot = (float) Math.random() * 80 - 40;
     }
 
-    static void equipAccessory (Accessory acc) {
+    static void equipAccessory(Accessory acc) {
         acc.buttonState = "Unequip";
         acc.equiped = true;
         if (acc.type == 0) {
@@ -36,13 +36,11 @@ public class Capybara extends Actor {
             unequipAccessory(face);
             unequipAccessory(helmet);
             helmet = acc;
-        }
-        else if (acc.type == 1) {
+        } else if (acc.type == 1) {
             unequipAccessory(helmet);
             unequipAccessory(head);
             head = acc;
-        }
-        else if (acc.type == 2) {
+        } else if (acc.type == 2) {
             unequipAccessory(helmet);
             unequipAccessory(face);
             face = acc;

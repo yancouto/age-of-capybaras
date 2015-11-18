@@ -1,0 +1,9 @@
+{
+  "name": "Rotten Meat",
+  "description": "Spontaneous Generation rate",
+  "cost": 65651116600062999211414141414142,
+  "type": "generator",
+  "generatorName": "Spontaneous Generation",
+  "multiplier": 2,
+  "seed": 1233213411
+}

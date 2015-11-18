@@ -1,0 +1,9 @@
+{
+  "name": "Human Slaves",
+  "description": "Capybara Colony rate",
+  "cost": 5955,
+  "type": "generator",
+  "generatorName": "Capybara Colony",
+  "multiplier": 3,
+  "seed": 222222
+}

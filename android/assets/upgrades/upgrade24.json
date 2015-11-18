@@ -1,0 +1,9 @@
+{
+  "name": "Cabybara Rotation",
+  "description": "Capybara Farm rate",
+  "cost": 1116600062999211414141414142,
+  "type": "generator",
+  "generatorName": "Capybara Farm",
+  "multiplier": 2,
+  "seed": 221213345
+}

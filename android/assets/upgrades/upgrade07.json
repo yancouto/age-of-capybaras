@@ -1,0 +1,9 @@
+{
+  "name": "Transgender Operation",
+  "description": "Human Transformation rate",
+  "cost": 9994815162342,
+  "type": "generator",
+  "generatorName": "Human Transformation",
+  "multiplier": 2.2222,
+  "seed": 1236969
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Moar Honey",
+  "description": "Hydrochoerus Hive rate",
+  "cost": 999,
+  "type": "generator",
+  "generatorName": "Hydrochoerus Hive",
+  "multiplier": 2,
+  "seed": 111111
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Fagocitosis",
+  "description": "Matriarch Mitosis rate",
+  "cost": 16600062999211414141414142,
+  "type": "generator",
+  "generatorName": "Matriarch Mitosis",
+  "multiplier": 2.2,
+  "seed": 21213345
+}

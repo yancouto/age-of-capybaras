@@ -1,9 +1,9 @@
 {
-  "name": "Double stomp",
+  "name": "Fat Capybara",
   "description": "Increases click",
-  "cost": 250,
+  "cost": 299997,
   "type": "click",
   "generatorName": "none",
-  "multiplier": 3,
-  "seed": 8452982
+  "multiplier": 10098,
+  "seed": 2345653
 }

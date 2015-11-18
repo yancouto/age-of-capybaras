@@ -15,7 +15,7 @@ import com.mygdx.aoc.manager.ScreenManager;
 public class Splash implements GameScreen {
     final private BitmapFont font;
     final private SpriteBatch batch;
-    private final float waitTime = 2.5f;
+    private final float waitTime = 0.01f;
     OrthographicCamera cam;
     private float total;
     private AdsController adsController;

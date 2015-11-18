@@ -1,0 +1,9 @@
+{
+  "name": "Transgenic Crops",
+  "description": "Capybara Farm rate",
+  "cost": 4815162342,
+  "type": "generator",
+  "generatorName": "Capybara Farm",
+  "multiplier": 4.815162342,
+  "seed": 4815162342
+}

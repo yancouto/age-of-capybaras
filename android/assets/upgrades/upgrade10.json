@@ -1,0 +1,9 @@
+{
+  "name": "Paradox Creation",
+  "description": "Time Machine rate",
+  "cost": 999211414141414142,
+  "type": "generator",
+  "generatorName": "Time Machine",
+  "multiplier": 3.333,
+  "seed": 123321341
+}
