@@ -4,7 +4,7 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
 
@@ -14,11 +14,11 @@ allprojects {
 
     version = '1.0'
     ext {
-        appName = "Age of Capybaras"
-        gdxVersion = '1.7.0'
-        roboVMVersion = '1.8.0'
+        appName = "age-of-capybaras"
+        gdxVersion = '1.7.1'
+        roboVMVersion = '1.9.0'
         box2DLightsVersion = '1.4'
-        ashleyVersion = '1.6.0'
+        ashleyVersion = '1.7.0'
         aiVersion = '1.6.0'
     }
 
@@ -26,6 +26,19 @@ allprojects {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+}
+
+project(":desktop") {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile project(":core")
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
     }
 }
 
@@ -63,7 +76,8 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
         testCompile "junit:junit:4.11"
-        testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+        testCompile "org.mockito:mockito-core:1.9.5"
+        testCompile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         testCompile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
