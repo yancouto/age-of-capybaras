@@ -8,14 +8,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class LoreTest {
 
     @Before
     public void setUp() throws Exception {
         LwjglApplicationConfiguration conf = new LwjglApplicationConfiguration();
-        LwjglApplicationConfiguration.disableAudio = true;
         new LwjglApplication(new AgeOfCapybaras(null), conf);
     }
 
