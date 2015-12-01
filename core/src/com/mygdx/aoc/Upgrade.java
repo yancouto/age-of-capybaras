@@ -147,6 +147,18 @@ public class Upgrade extends Widget {
         return false;
     }
 
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public BigDecimal getMultiplier() {
+        return multiplier;
+    }
+
+    public Generator getGen() {
+        return gen;
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.setColor(fillColor);

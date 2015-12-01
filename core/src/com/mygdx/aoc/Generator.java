@@ -168,6 +168,12 @@ public class Generator extends Widget {
         return true;
     }
 
+    public void setCurrentLevel(int i) {
+        currentLevel = i;
+    }
+
+    public BigDecimal getCurrentCPS() { return currentCPS; }
+
     /**
      * Saves this generator's data
      *
