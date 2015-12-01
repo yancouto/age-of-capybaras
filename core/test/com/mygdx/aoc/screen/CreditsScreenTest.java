@@ -35,7 +35,7 @@ public class CreditsScreenTest {
 
                 Gdx.input.getInputProcessor().keyDown(Input.Keys.BACK);
 
-                tests[0] = ScreenManager.topScreen() != CreditsScreen.instance();
+                tests[0] = ScreenManager.topScreen() == OptionsMenu.instance();
                 done = true;
             }
         });
