@@ -1,6 +1,8 @@
 package com.mygdx.aoc.manager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.aoc.AgeOfCapybaras;
@@ -61,6 +63,38 @@ public class ScreenManagerTest {
         ord.verify(gs).render(0);
         ord.verify(gs2).render(0);
         ord.verify(gs3).render(0);
+    }
+
+    InputProcessor ip1, ip2, ip3;
+
+    @Test
+    public void testInput() throws Exception {
+        done = false;
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                gs = mock(GameScreen.class);
+                gs2 = mock(GameScreen.class);
+                gs3 = mock(GameScreen.class);
+                ip1 = mock(InputProcessor.class);
+                ip2 = mock(InputProcessor.class);
+                ip3 = mock(InputProcessor.class);
+                when(gs.processor()).thenReturn(ip1);
+                when(gs2.processor()).thenReturn(ip2);
+                when(gs3.processor()).thenReturn(ip3);
+                ScreenManager.pushScreen(gs);
+                ScreenManager.pushScreen(gs2);
+                ScreenManager.pushScreen(gs3);
+                Gdx.input.getInputProcessor().keyDown(Input.Keys.BUTTON_SELECT);
+                for (int i = 0; i < 3; i++) ScreenManager.popScreen();
+                done = true;
+            }
+        });
+        while (!done) Thread.sleep(10);
+        InOrder ord = inOrder(ip3, ip2, ip1);
+        ord.verify(ip3).keyDown(Input.Keys.BUTTON_SELECT);
+        ord.verify(ip2).keyDown(Input.Keys.BUTTON_SELECT);
+        ord.verify(ip1).keyDown(Input.Keys.BUTTON_SELECT);
     }
 
     @Test
