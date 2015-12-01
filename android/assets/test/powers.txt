@@ -1,0 +1,3 @@
+power1
+power2
+power3

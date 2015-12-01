@@ -10,12 +10,13 @@ import com.mygdx.aoc.screen.MainScreen;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class UpgradeTest {
 
@@ -41,9 +42,9 @@ public class UpgradeTest {
 
     Cell cellBefore, cellAfter;
     Upgrade upg;
-    BigDecimal capybarasBefore, capybarasAfter;
+    BigDecimal capybarasBefore, capybarasAfter, cost;
     BigDecimal cpcBefore, cpsBefore, curCpsBefore;
-    int ageBefore;
+    int ageBefore, ageAfter;
     boolean done;
 
     @Test
@@ -112,8 +113,6 @@ public class UpgradeTest {
         assertEquals(User.cpc, cpcBefore.multiply(upg.getMultiplier()));
     }
 
-//  TODO: Still remains the case when finalAge is true: The cell should not display after bought
-//  TODO: Fix cost subtraction error
     @Test
     public void testBuyNextAge() throws Exception {
         done = false;
@@ -122,7 +121,7 @@ public class UpgradeTest {
             @Override
             public void run() {
                 for (Upgrade u : Upgrade.upgrades) {
-                    if (u.getType().equals("age") && !u.isFinalAge()) {
+                    if (u.getType().equals("age")) {
                         upg = u;
                         break;
                     }
@@ -132,14 +131,22 @@ public class UpgradeTest {
                 cellBefore = MainScreen.instance().upgrades.getCell(upg);
                 ageBefore = CapybaraScreen.currentAge();
                 capybarasBefore = User.capybaras;
+                cost = upg.getCost();
                 upg.buyNextAge(true);
                 capybarasAfter = User.capybaras;
+                ageAfter = CapybaraScreen.currentAge();
+                while (!upg.isFinalAge()) {
+                    User.capybaras = upg.getCost();
+                    upg.buyNextAge(true);
+                }
+                cellAfter = MainScreen.instance().upgrades.getCell(upg);
                 done = true;
             }
         });
         while (!done) Thread.sleep(10);
         assertNotNull(cellBefore);
-//        assertEquals(upg.getCost(), capybarasBefore.subtract(capybarasAfter));
-        assertEquals(CapybaraScreen.currentAge(), ageBefore + 1);
+        assertNull(cellAfter);
+        assertEquals(cost, capybarasBefore.subtract(capybarasAfter));
+        assertEquals(ageAfter, ageBefore + 1);
     }
 }
