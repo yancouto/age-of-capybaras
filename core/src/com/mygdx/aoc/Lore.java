@@ -35,7 +35,7 @@ public class Lore {
     }
 
 
-    private static class LoreData {
+    public static class LoreData {
         String name, description;
         int age;
 

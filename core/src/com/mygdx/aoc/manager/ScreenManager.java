@@ -25,7 +25,7 @@ import java.util.Stack;
  */
 public class ScreenManager {
     static private Stack<GameScreen> screenStack = new Stack<GameScreen>();
-    private static Color backColor = Color.WHITE;
+    static private Color backColor = Color.WHITE;
 
     static public boolean isEmpty() {
         return screenStack.isEmpty();

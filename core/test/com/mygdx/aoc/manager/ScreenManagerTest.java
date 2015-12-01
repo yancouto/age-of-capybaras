@@ -12,10 +12,14 @@ import com.mygdx.aoc.screen.Splash;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 
 import java.math.BigDecimal;
+import java.util.Stack;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -30,8 +34,55 @@ public class ScreenManagerTest {
         new LwjglApplication(new AgeOfCapybaras(null), conf);
     }
 
+    boolean[] tests;
     boolean done;
-    GameScreen gs;
+
+    GameScreen gs, gs2, gs3;
+
+    @Test
+    public void testRender() throws Exception {
+        done = false;
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                gs = mock(GameScreen.class);
+                gs2 = mock(GameScreen.class);
+                gs3 = mock(GameScreen.class);
+                ScreenManager.pushScreen(gs);
+                ScreenManager.pushScreen(gs2);
+                ScreenManager.pushScreen(gs3);
+                ScreenManager.render(0);
+                for (int i = 0; i < 3; i++) ScreenManager.popScreen();
+                done = true;
+            }
+        });
+        while (!done) Thread.sleep(10);
+        InOrder ord = inOrder(gs, gs2, gs3);
+        ord.verify(gs).render(0);
+        ord.verify(gs2).render(0);
+        ord.verify(gs3).render(0);
+    }
+
+    @Test
+    public void testIsEmpty() throws Exception {
+        done = false;
+        tests = new boolean[2];
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                gs = mock(GameScreen.class);
+                boolean bak = ScreenManager.isEmpty();
+                ScreenManager.pushScreen(gs);
+                tests[0] = !ScreenManager.isEmpty();
+                ScreenManager.popScreen();
+                tests[1] = ScreenManager.isEmpty() == bak;
+                done = true;
+            }
+        });
+        while (!done) Thread.sleep(10);
+        for (boolean b : tests)
+            assertTrue(b);
+    }
 
     @Test
     public void testPopScreen() throws Exception {
@@ -82,6 +133,49 @@ public class ScreenManagerTest {
         });
         while (!done) Thread.sleep(10);
         verify(gs, times(1)).show();
+    }
+
+    // testing pushScreen, popScreen, topScreen and isEmpty
+    @Test
+    public void testAllCommands() throws Exception {
+        tests = new boolean[5];
+        done = false;
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                gs = mock(GameScreen.class);
+                gs2 = mock(GameScreen.class);
+                gs3 = mock(GameScreen.class);
+                Stack<GameScreen> bak = new Stack<GameScreen>();
+                while (!ScreenManager.isEmpty()) bak.push(ScreenManager.popScreen());
+
+                ScreenManager.pushScreen(gs);
+                ScreenManager.popScreen();
+                tests[0] = ScreenManager.isEmpty();
+                ScreenManager.pushScreen(gs2);
+                ScreenManager.pushScreen(gs);
+                tests[1] = ScreenManager.topScreen() == gs;
+                tests[2] = ScreenManager.popScreen() == gs;
+                ScreenManager.pushScreen(gs3);
+                tests[3] = !ScreenManager.isEmpty();
+                ScreenManager.popScreen();
+                tests[4] = ScreenManager.topScreen() == gs2;
+                ScreenManager.popScreen();
+
+                while (!bak.isEmpty()) ScreenManager.pushScreen(bak.pop());
+
+                done = true;
+            }
+        });
+        while (!done) Thread.sleep(10);
+        boolean[] allTrue = {true, true, true, true, true};
+        assertArrayEquals(tests, allTrue);
+        verify(gs, times(2)).show();
+        verify(gs, times(2)).hide();
+        verify(gs2, times(1)).show();
+        verify(gs2, times(1)).hide();
+        verify(gs3, times(1)).show();
+        verify(gs3, times(1)).hide();
     }
 
     boolean capAccessory, capMain;
