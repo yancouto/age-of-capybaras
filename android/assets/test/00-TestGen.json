@@ -1,0 +1,7 @@
+{
+  "initialCost": 2,
+  "firstWin": 2,
+  "cpsGrowth": 2,
+  "costGrowth": 2,
+  "seed": 0
+}

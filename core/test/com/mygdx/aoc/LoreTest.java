@@ -26,6 +26,7 @@ public class LoreTest {
 
     boolean done;
     boolean[] tests;
+
     @Test
     public void testGetLore() throws Exception {
         done = false;

@@ -17,12 +17,13 @@ import java.math.BigDecimal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class UpgradeTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        if(Gdx.app != null) return;
+        if (Gdx.app != null) return;
         LwjglApplicationConfiguration conf = new LwjglApplicationConfiguration();
         new LwjglApplication(new AgeOfCapybaras(null), conf);
     }
@@ -109,8 +110,8 @@ public class UpgradeTest {
         while (!done) Thread.sleep(10);
         assertNotNull(cellBefore);
         assertNull(cellAfter);
-        assertEquals(upg.getCost(), capybarasBefore.subtract(capybarasAfter));
-        assertEquals(User.cpc, cpcBefore.multiply(upg.getMultiplier()));
+        assertTrue(upg.getCost().compareTo(capybarasBefore.subtract(capybarasAfter)) == 0);
+        assertTrue(User.cpc.compareTo(cpcBefore.multiply(upg.getMultiplier())) == 0);
     }
 
     @Test
@@ -146,7 +147,7 @@ public class UpgradeTest {
         while (!done) Thread.sleep(10);
         assertNotNull(cellBefore);
         assertNull(cellAfter);
-        assertEquals(cost, capybarasBefore.subtract(capybarasAfter));
+        assertTrue(cost.compareTo(capybarasBefore.subtract(capybarasAfter)) == 0);
         assertEquals(ageAfter, ageBefore + 1);
     }
 }

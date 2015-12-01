@@ -131,6 +131,7 @@ public class Generator extends Widget {
 
     /**
      * Multiplies current CPS by {@code num}. Assumes {@code currentLevel > 0}.
+     *
      * @param num amount to multiply CPS
      */
     public void multiplyCPS(BigDecimal num) {
@@ -172,7 +173,9 @@ public class Generator extends Widget {
         currentLevel = i;
     }
 
-    public BigDecimal getCurrentCPS() { return currentCPS; }
+    public BigDecimal getCurrentCPS() {
+        return currentCPS;
+    }
 
     /**
      * Saves this generator's data

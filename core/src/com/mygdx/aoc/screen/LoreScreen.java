@@ -1,4 +1,3 @@
-
 package com.mygdx.aoc.screen;
 
 import com.badlogic.gdx.Input;

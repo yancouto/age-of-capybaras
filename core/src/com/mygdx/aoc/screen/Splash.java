@@ -53,7 +53,7 @@ public class Splash implements GameScreen {
         batch.end();
 
         total += delta;
-        if(total > waitTime || Gdx.input.isTouched()) {
+        if (total > waitTime || Gdx.input.isTouched()) {
             while (ScreenManager.popScreen() != this) ;
             ScreenManager.pushScreen(CapybaraScreen.instance());
             MainScreen mainScreen = MainScreen.instance();

@@ -11,7 +11,7 @@ public class Lore {
 
     public static Lore[] lores;
 
-    public Lore (String name) {
+    public Lore(String name) {
         ResourceManager.json.fromJson(LoreData.class, Gdx.files.internal("lores/" + name + ".json")).copyTo(this);
     }
 
@@ -23,7 +23,7 @@ public class Lore {
         return loreDescription;
     }
 
-    public int getLoreAge () {
+    public int getLoreAge() {
         return loreAge;
     }
 

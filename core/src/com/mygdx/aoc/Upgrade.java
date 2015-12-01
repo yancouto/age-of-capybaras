@@ -32,7 +32,7 @@ public class Upgrade extends Widget {
     private Generator gen = null;
     private BigDecimal[] agesCost = null;
 
-    public Upgrade (FileHandle file) {
+    public Upgrade(FileHandle file) {
         ResourceManager.json.fromJson(UpgradeData.class, file).copyTo(this);
         float a = random.nextFloat(), b = random.nextFloat(), c = random.nextFloat();
 
@@ -140,7 +140,7 @@ public class Upgrade extends Widget {
         return bought;
     }
 
-    public boolean isFinalAge () {
+    public boolean isFinalAge() {
         if (agesCost != null)
             if (agesCost.length == CapybaraScreen.currentAge())
                 return true;
@@ -200,8 +200,7 @@ public class Upgrade extends Widget {
                 u.agesCost = new BigDecimal[agesCost.length];
                 for (int i = 0; i < agesCost.length; i++)
                     u.agesCost[i] = new BigDecimal(agesCost[i]);
-            }
-            else
+            } else
                 u.cost = new BigDecimal(cost);
         }
     }

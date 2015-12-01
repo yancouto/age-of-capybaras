@@ -59,7 +59,7 @@ public class MainScreen implements GameScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (accessory.hit(x, y, true) == null) return;
                 System.out.println("Going to Accessory");
-                while (ScreenManager.popScreen() != MainScreen.this);
+                while (ScreenManager.popScreen() != MainScreen.this) ;
                 ScreenManager.pushScreen(AccessoryScreen.instance(adsController));
             }
         });
@@ -173,13 +173,11 @@ public class MainScreen implements GameScreen {
                     u.buyClick(false);
                 else if (u.getType().equals("generator"))
                     u.buyGenerator(false);
-            }
-            else {
+            } else {
                 if (!u.getType().equals("age")) {
                     upgrades.add(u);
                     upgrades.row();
-                }
-                else if (u.getType().equals("age") && !u.isFinalAge()) {
+                } else if (u.getType().equals("age") && !u.isFinalAge()) {
                     u.buyNextAge(false);
                     upgrades.add(u);
                     upgrades.row();

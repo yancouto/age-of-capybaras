@@ -123,6 +123,7 @@ public class User {
     /**
      * Adds Capybara that should be added assuming you left the device at time {@code prev}
      * and the game kept running
+     *
      * @param prev time the user left the game
      */
     static public void addPast(long prev) {
@@ -135,6 +136,7 @@ public class User {
 
     /**
      * Adds {@code num} CPS to the current CPS
+     *
      * @param num CPS to add
      */
     static public void addCPS(BigDecimal num) {
@@ -159,6 +161,7 @@ public class User {
     static public void removeCapybara(BigDecimal num) {
         capybaras = capybaras.subtract(num);
     }
+
     /**
      * No description
      *

@@ -1,11 +1,11 @@
 package com.mygdx.aoc;
 
+import com.admob.AdsController;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.aoc.manager.ResourceManager;
 import com.mygdx.aoc.manager.ScreenManager;
 import com.mygdx.aoc.screen.Splash;
-import com.admob.AdsController;
 
 /**
  * Main class, initializes all basic stuff and then creates the SplashScreen
@@ -17,7 +17,7 @@ public class AgeOfCapybaras extends Game {
      */
     public AdsController adsController;
 
-    public AgeOfCapybaras(AdsController adsController){
+    public AgeOfCapybaras(AdsController adsController) {
         this.adsController = adsController;
     }
 

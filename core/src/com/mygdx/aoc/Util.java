@@ -18,6 +18,7 @@ public class Util {
 
     /**
      * Generates a random Color with alpha 1
+     *
      * @return random Color
      */
     public static Color randomColor() {
