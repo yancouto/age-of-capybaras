@@ -27,6 +27,10 @@ public class ScreenManager {
     static private Stack<GameScreen> screenStack = new Stack<GameScreen>();
     private static Color backColor = Color.WHITE;
 
+    static public boolean isEmpty() {
+        return screenStack.isEmpty();
+    }
+
     /**
      * Removes and returns the topmost screen on the stack, its {@code hide()} method is called.
      *

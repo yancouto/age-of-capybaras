@@ -182,7 +182,7 @@ public class AccessoryScreen implements GameScreen {
 
     public static AccessoryScreen instance(AdsController adsController) {
         if (accessoryScreen == null) accessoryScreen = new AccessoryScreen(adsController);
-        adsController.requestAd();
+        if (adsController != null) adsController.requestAd();
         return accessoryScreen;
     }
 

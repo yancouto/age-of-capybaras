@@ -19,8 +19,10 @@ public class Splash implements GameScreen {
     OrthographicCamera cam;
     private float total;
     private AdsController adsController;
+    public static Splash splash;
 
     public Splash(AdsController adsController) {
+        splash = this;
         this.adsController = adsController;
         font = ResourceManager.getFont("goodDog", 180);
         batch = ResourceManager.batch;

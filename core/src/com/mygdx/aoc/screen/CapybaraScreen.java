@@ -32,7 +32,7 @@ import java.util.Deque;
 public class CapybaraScreen implements GameScreen {
     static final String[] musicNames = {"Lurid Delusion.mp3", "Heroic Minority.mp3", "Melancholy RPG.mp3"};
     public static Music backMusic;
-    private static CapybaraScreen capybaraScreen;
+    public static CapybaraScreen capybaraScreen;
     private static int curAge;
     private static Texture back;
     private Stage stage, stage2;
