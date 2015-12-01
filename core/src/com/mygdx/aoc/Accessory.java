@@ -33,7 +33,7 @@ public class Accessory extends Widget {
     public String imageName;
     public Drawable image;
     private BitmapFont fontSmall, fontBig, fontTiny;
-    private BigDecimal price;
+    public BigDecimal price;
     private Color backColor, fillColor;
     private Rectangle actionButton = new Rectangle();
     private boolean buttonHeld = false;
@@ -132,7 +132,7 @@ public class Accessory extends Widget {
     }
 
     public boolean buyAccessory() {
-        if (User.kapivarium.compareTo(price) < 0) return false;
+        if ((User.kapivarium.compareTo(price) < 0) || purchased) return false;
         User.kapivarium = User.kapivarium.subtract(price);
         purchased = true;
         return true;
