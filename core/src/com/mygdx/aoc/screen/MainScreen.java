@@ -33,7 +33,7 @@ public class MainScreen implements GameScreen {
     public Table upgrades;
     private Stage stage;
     private Table table;
-    private Button option, accessory;
+    public Button option, accessory;
     private ScrollPane scrollPaneGenerators, scrollPaneUpgrades;
     private Table generators;
     private BitmapFont numberFont, nameFont;
