@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.aoc.AgeOfCapybaras;
 import com.mygdx.aoc.manager.ScreenManager;
 
@@ -25,6 +26,7 @@ public class MainScreenTest {
 
     boolean done;
     boolean[] tests;
+    MainScreen ms;
 
     @Test
     public void testBackKey() throws Exception {
@@ -94,5 +96,39 @@ public class MainScreenTest {
         while (!done) Thread.sleep(10);
         for (boolean b : tests)
             assertTrue(b);
+    }
+
+    @Test
+    public void testGeneratorsTab() throws Exception {
+        done = false;
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                ms = MainScreen.instance();
+                ClickListener cc = (ClickListener) ms.gens.getListeners().get(1);
+                cc.clicked(null, 50, 50);
+                done = true;
+            }
+        });
+        while (!done) Thread.sleep(10);
+        assertTrue(ms.scrollPaneGenerators.isVisible());
+        assertTrue(!ms.scrollPaneUpgrades.isVisible());
+    }
+
+    @Test
+    public void testUpgradesTab() throws Exception {
+        done = false;
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                ms = MainScreen.instance();
+                ClickListener cc = (ClickListener) ms.upgs.getListeners().get(1);
+                cc.clicked(null, 50, 50);
+                done = true;
+            }
+        });
+        while (!done) Thread.sleep(10);
+        assertTrue(ms.scrollPaneUpgrades.isVisible());
+        assertTrue(!ms.scrollPaneGenerators.isVisible());
     }
 }

@@ -34,7 +34,8 @@ public class MainScreen implements GameScreen {
     private Stage stage;
     private Table table;
     public Button option, accessory;
-    private ScrollPane scrollPaneGenerators, scrollPaneUpgrades;
+    public Button gens, upgs;
+    public ScrollPane scrollPaneGenerators, scrollPaneUpgrades;
     private Table generators;
     private BitmapFont numberFont, nameFont;
     private AdsController adsController;
@@ -89,8 +90,8 @@ public class MainScreen implements GameScreen {
                 ResourceManager.skin.newDrawable("pixel", Color.ORANGE), // check
                 ResourceManager.getFont("goodDog", Math.round(1920 * .065f)));
 
-        TextButton gens = new TextButton("Generators", textButtonStyle);
-        TextButton upgs = new TextButton("Upgrades", textButtonStyle);
+        gens = new TextButton("Generators", textButtonStyle);
+        upgs = new TextButton("Upgrades", textButtonStyle);
         gens.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
