@@ -30,10 +30,10 @@ public class AccessoryScreen implements GameScreen {
     private static AccessoryScreen accessoryScreen;
     private Stage stage;
     private Table table, tabs;
-    private Button back, ads;
-    private Button helmet, head, face;
+    public Button back, ads;
+    public Button helmet, head, face;
     private ButtonGroup tabsGroup;
-    private ScrollPane scrollPaneHelmet, scrollPaneHead, scrollPaneFace;
+    public ScrollPane scrollPaneHelmet, scrollPaneHead, scrollPaneFace;
     private Table accHelmet, accHead, accFace;
     private BitmapFont numberFont, nameFont;
     private AdsController adsController;
